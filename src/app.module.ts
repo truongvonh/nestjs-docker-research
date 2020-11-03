@@ -6,9 +6,14 @@ import { AppService } from './app.service';
 import { CatModule } from './cat/cat.module';
 import { AllExceptionFilter } from './shared/exception.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
+import { MongooseModule } from '@nestjs/mongoose';
+import { uri } from './database/database.provider';
+
+console.log('uri', uri);
 
 @Module({
-  imports: [CatModule],
+  imports: [MongooseModule.forRoot(uri), CatModule],
+  // imports: [DatabaseModule, CatModule],
   controllers: [AppController],
   providers: [
     AppService,
