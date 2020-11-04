@@ -18,7 +18,9 @@ export class CatController {
 
   @Get()
   async findAll(@Req() request: Request, @Res() res: Response) {
-    res.status(HttpStatus.OK).json(await this.catService.findAll());
+    return res.status(HttpStatus.OK).json({
+      data: await this.catService.findAll(),
+    });
   }
 
   @Get(':id')
@@ -28,7 +30,9 @@ export class CatController {
   }
 
   @Post()
-  async createCat(@Body() catDTO: CreateCatDTO) {
-    await this.catService.createCat(catDTO);
+  async createCat(@Body() catDTO: CreateCatDTO, @Res() res: Response) {
+    return res.status(HttpStatus.CREATED).json({
+      data: await this.catService.createCat(catDTO),
+    });
   }
 }

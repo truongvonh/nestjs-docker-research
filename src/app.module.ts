@@ -8,12 +8,11 @@ import { AllExceptionFilter } from './shared/exception.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { MongooseModule } from '@nestjs/mongoose';
 import { uri } from './database/database.provider';
-
-console.log('uri', uri);
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [MongooseModule.forRoot(uri), CatModule],
-  // imports: [DatabaseModule, CatModule],
+  imports: [MongooseModule.forRoot(uri), CatModule, AuthModule, UsersModule],
   controllers: [AppController],
   providers: [
     AppService,
