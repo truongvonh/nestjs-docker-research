@@ -11,6 +11,6 @@ import { WorkspaceModel, WorkspaceSchema } from './workspace.schema';
     // BoardModule,
   ],
   providers: [],
-  exports: [],
+  exports: [WorkspaceModule],
 })
 export class WorkspaceModule {}

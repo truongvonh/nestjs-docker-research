@@ -53,12 +53,13 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthenticationGuard)
+  @ApiOperation({ summary: 'Get user info' })
   @Get('user-info')
   public async getUserInfo(
     @Req() request: IUserRequest & Request,
     @Res() res: Response,
   ) {
     Logger.debug(request.user);
-    return res.status(HttpStatus.OK).json();
+    return res.status(HttpStatus.OK).json(request.user);
   }
 }

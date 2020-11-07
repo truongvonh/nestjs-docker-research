@@ -8,8 +8,8 @@ export class WorkspaceModel extends Document {
   @Prop({ type: Types.ObjectId, ref: 'UserModel' })
   user: UserModel;
 
-  @Prop({ type: [Types.ObjectId], ref: 'BoardModel' })
-  board: BoardModel[];
+  @Prop({ type: Types.ObjectId, ref: 'BoardModel' })
+  board: BoardModel;
 }
 
 export const WorkspaceSchema = SchemaFactory.createForClass(WorkspaceModel);
