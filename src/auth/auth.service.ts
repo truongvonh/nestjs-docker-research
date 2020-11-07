@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { RegisterDTO } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
@@ -19,18 +19,15 @@ export class AuthService {
   async registerUser(
     registerDTO: RegisterDTO,
   ): Promise<UserModel | ExceptionInformation> {
-    try {
-      let registerUser = await this.userService.getUserByEmail(
-        registerDTO.email,
+    let registerUser = await this.userService.getUserByEmail(registerDTO.email);
+
+    if (registerUser) {
+      throw new HttpException(
+        ERRORS_MESSAGE.USER_EXISTED,
+        HttpStatus.BAD_REQUEST,
       );
-
-      if (registerUser) {
-        throw new HttpException(
-          ERRORS_MESSAGE.USER_EXISTED,
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-
+    }
+    try {
       const password = await bcrypt.hash(registerDTO.password, SALT_LENGTH);
       registerUser = await this.userService.createNewUser({
         ...registerDTO,
@@ -62,19 +59,21 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<UserModel> {
-    try {
-      const userLogin = await this.userService.getUserByEmail(email);
+    // try {
 
-      await this.verifyPassword(password, userLogin.password);
+    Logger.debug(email);
+    const userLogin = await this.userService.getUserByEmail(email);
 
-      userLogin.password = null;
-      return userLogin;
-    } catch (e) {
-      throw new HttpException(
-        ERRORS_MESSAGE.SOMETHING_WRONG,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    await this.verifyPassword(password, userLogin.password);
+
+    userLogin.password = null;
+    return userLogin;
+    // } catch (e) {
+    //   throw new HttpException(
+    //     ERRORS_MESSAGE.SOMETHING_WRONG,
+    //     HttpStatus.INTERNAL_SERVER_ERROR,
+    //   );
+    // }
   }
 
   public getCookieWithJwtToken(userId: string) {

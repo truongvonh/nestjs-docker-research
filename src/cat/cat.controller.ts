@@ -11,11 +11,15 @@ import {
 import { Request, Response } from 'express';
 import { CatService } from './cat.service';
 import { CreateCatDTO } from './dto/cat.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Cat')
 @Controller('cat')
 export class CatController {
   constructor(private catService: CatService) {}
 
+  @ApiOperation({ summary: 'Get all cats' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Forbidden.' })
   @Get()
   async findAll(@Req() request: Request, @Res() res: Response) {
     return res.status(HttpStatus.OK).json({

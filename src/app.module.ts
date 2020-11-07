@@ -10,9 +10,18 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { uri } from './database/database.provider';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { WorkspaceModule } from './workspace/workspace.module';
+import { BoardModule } from './board/board.module';
 
 @Module({
-  imports: [MongooseModule.forRoot(uri), CatModule, AuthModule, UsersModule],
+  imports: [
+    MongooseModule.forRoot(uri),
+    CatModule,
+    AuthModule,
+    WorkspaceModule,
+    UsersModule,
+    BoardModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
