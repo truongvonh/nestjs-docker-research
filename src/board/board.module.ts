@@ -1,17 +1,39 @@
-import { forwardRef, Logger, Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BoardModel, BoardSchema } from './board.schema';
-import { WorkspaceModule } from '../workspace/workspace.module';
 import { BoardController } from './board.controller';
 import { WorkspaceModel, WorkspaceSchema } from '../workspace/workspace.schema';
+import { RedisModule } from 'nestjs-redis';
+import { CachingService } from '../database/redis/redis.service';
+import { BoardService } from './board.service';
+import { CachingUserBoardMiddleware } from './middlewares/caching.middleware';
+import { UserModel, UserSchema } from '../users/user.schema';
 
 @Module({
   imports: [
+    RedisModule,
     MongooseModule.forFeature([
       { name: BoardModel.name, schema: BoardSchema },
       { name: WorkspaceModel.name, schema: WorkspaceSchema },
+      { name: UserModel.name, schema: UserSchema },
     ]),
   ],
   controllers: [BoardController],
+  providers: [CachingService, BoardService],
 })
-export class BoardModule {}
+export class BoardModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(CachingUserBoardMiddleware)
+      // .with()
+      .forRoutes({
+        path: 'board/:userId',
+        method: RequestMethod.GET,
+      });
+  }
+}

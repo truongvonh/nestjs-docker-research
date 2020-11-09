@@ -12,9 +12,12 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { WorkspaceModule } from './workspace/workspace.module';
 import { BoardModule } from './board/board.module';
+import { RedisModule } from 'nestjs-redis';
+import { REDIS_OPTIONS } from './database/redis/redis.options';
 
 @Module({
   imports: [
+    RedisModule.register(REDIS_OPTIONS),
     MongooseModule.forRoot(uri),
     CatModule,
     AuthModule,

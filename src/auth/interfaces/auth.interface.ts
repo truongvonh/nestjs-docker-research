@@ -7,3 +7,9 @@ export interface ITokenPayload {
 export interface IUserRequest {
   user: UserModel;
 }
+
+export interface IUserBoardRequest {
+  params: {
+    userId: string;
+  };
+}

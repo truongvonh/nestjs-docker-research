@@ -6,10 +6,10 @@ import { BoardModel } from '../board/board.schema';
 @Schema({ timestamps: true })
 export class WorkspaceModel extends Document {
   @Prop({ type: Types.ObjectId, ref: 'UserModel' })
-  user: UserModel;
+  user: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'BoardModel' })
-  board: BoardModel;
+  @Prop({ type: Types.ObjectId, ref: BoardModel.name })
+  board: Types.ObjectId;
 }
 
 export const WorkspaceSchema = SchemaFactory.createForClass(WorkspaceModel);
