@@ -26,12 +26,11 @@ import { CachingUserBoardMiddleware } from './middlewares/caching.middleware';
   controllers: [BoardController],
   providers: [CachingService, BoardService],
 })
-export class BoardModule {}
-// export class BoardModule implements NestModule {
-//   public configure(consumer: MiddlewareConsumer) {
-//     consumer.apply(CachingUserBoardMiddleware).forRoutes({
-//       path: 'board/:userId',
-//       method: RequestMethod.GET,
-//     });
-//   }
-// }
+export class BoardModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CachingUserBoardMiddleware).forRoutes({
+      path: 'board/:userId',
+      method: RequestMethod.GET,
+    });
+  }
+}
