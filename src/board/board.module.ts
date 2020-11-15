@@ -11,8 +11,8 @@ import { WorkspaceModel, WorkspaceSchema } from '../workspace/workspace.schema';
 import { RedisModule } from 'nestjs-redis';
 import { CachingService } from '../database/redis/redis.service';
 import { BoardService } from './board.service';
-import { CachingUserBoardMiddleware } from './middlewares/caching.middleware';
 import { UserModel, UserSchema } from '../users/user.schema';
+import { CachingUserBoardMiddleware } from './middlewares/caching.middleware';
 
 @Module({
   imports: [
@@ -26,14 +26,12 @@ import { UserModel, UserSchema } from '../users/user.schema';
   controllers: [BoardController],
   providers: [CachingService, BoardService],
 })
-export class BoardModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(CachingUserBoardMiddleware)
-      // .with()
-      .forRoutes({
-        path: 'board/:userId',
-        method: RequestMethod.GET,
-      });
-  }
-}
+export class BoardModule {}
+// export class BoardModule implements NestModule {
+//   public configure(consumer: MiddlewareConsumer) {
+//     consumer.apply(CachingUserBoardMiddleware).forRoutes({
+//       path: 'board/:userId',
+//       method: RequestMethod.GET,
+//     });
+//   }
+// }

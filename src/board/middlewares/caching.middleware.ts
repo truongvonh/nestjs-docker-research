@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common';
 import { CachingService } from '../../database/redis/redis.service';
 import { IUserBoardRequest } from '../../auth/interfaces/auth.interface';
-import { Request, Response } from 'express';
 import { CACHE_KEY_USER_BOARD } from '../constants/cache.key';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class CachingUserBoardMiddleware implements NestMiddleware {
@@ -29,6 +29,3 @@ export class CachingUserBoardMiddleware implements NestMiddleware {
     }
   }
 }
-
-// @Injectable()
-// export class CachingBoardUsersMiddleware implements NestMiddleware {}

@@ -6,7 +6,6 @@ import { BoardModel } from '../board.schema';
 
 export class CreateBoardDTO {
   @IsString()
-  @IsNotEmpty()
   @MinLength(5)
   @MaxLength(20)
   @ApiProperty({
