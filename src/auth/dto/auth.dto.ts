@@ -4,6 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 const example = {
   email: 'vonhattruong250695@gmail.com',
   password: '123qwe123qwe@',
+  name: 'Vo Nhat Truong',
 };
 
 export class RegisterDTO {
@@ -15,8 +16,9 @@ export class RegisterDTO {
   readonly email: string;
 
   @ApiProperty({
-    example: 'Vo Nhat Truong',
+    example: example.name,
   })
+  @IsString()
   readonly name: string;
 
   @ApiProperty({
@@ -24,7 +26,7 @@ export class RegisterDTO {
   })
   @IsNotEmpty()
   @IsString()
-  password: string;
+  readonly password: string;
 }
 
 export class UserLoginDTO {
