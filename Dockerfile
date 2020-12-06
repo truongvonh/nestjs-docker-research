@@ -25,12 +25,13 @@ WORKDIR /usr/src/app
 COPY yarn.* ./
 
 #RUN npm install  --only=production
-RUN yarn  --only=production
 
 COPY . .
 
 #COPY --from=development /usr/src/app/dist ./dist
 COPY --from=development . ./dist
+
+RUN yarn  --only=production
 
 RUN yarn build
 
