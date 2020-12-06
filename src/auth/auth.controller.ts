@@ -16,6 +16,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from './guard/local.guard';
 import JwtAuthenticationGuard from './guard/jwt.guard';
 import { IUserRequest } from './interfaces/auth.interface';
+import { SUCCESS_MESSAGE } from '../constants/messages/success';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -47,9 +48,7 @@ export class AuthController {
 
     res.cookie(process.env.COOKIE_AUTH_KEY, token, cookieOption);
 
-    return res.status(HttpStatus.OK).json({
-      data: validUser,
-    });
+    return res.status(HttpStatus.OK).json(validUser);
   }
 
   @UseGuards(JwtAuthenticationGuard)
@@ -62,4 +61,19 @@ export class AuthController {
     Logger.debug(request.user);
     return res.status(HttpStatus.OK).json(request.user);
   }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @ApiOperation({ summary: 'User logout' })
+  @Post('log-out')
+  public async userLogout(
+    @Req() request: IUserRequest & Request,
+    @Res() res: Response,
+  ) {
+    Logger.debug(request.user);
+    res.clearCookie(process.env.COOKIE_AUTH_KEY);
+
+    return res.status(HttpStatus.OK).json(SUCCESS_MESSAGE.OK);
+  }
 }
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmMyNzM5Mzk3MDE1ZDAxYThmZjI1OTUiLCJpYXQiOjE2MDY1Nzk4OTksImV4cCI6MTYwNzQ3OTg5OX0.S2fCNB90tJtQ9CnLFlV23DuIYTUgip1tZHw1o4a4KIg

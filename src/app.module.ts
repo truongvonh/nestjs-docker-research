@@ -14,6 +14,7 @@ import { WorkspaceModule } from './workspace/workspace.module';
 import { BoardModule } from './board/board.module';
 import { RedisModule } from 'nestjs-redis';
 import { REDIS_OPTIONS } from './database/redis/redis.options';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { REDIS_OPTIONS } from './database/redis/redis.options';
     WorkspaceModule,
     UsersModule,
     BoardModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [

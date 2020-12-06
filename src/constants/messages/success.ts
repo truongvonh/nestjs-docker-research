@@ -1,3 +1,4 @@
-export declare enum SUCCESS_MESSAGE {
+export enum SUCCESS_MESSAGE {
   CREATED = 'Created',
+  OK = 'Ok',
 }

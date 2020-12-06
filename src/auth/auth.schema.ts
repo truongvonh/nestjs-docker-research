@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document, SchemaTypes, Types } from 'mongoose';
 import { UserModel } from '../users/user.schema';
 
 export const ROLE = {
@@ -18,8 +18,8 @@ export class AuthModel extends Document {
   @Prop({ type: String })
   refreshToken: string;
 
-  @Prop({ type: Types.ObjectId, ref: UserModel.name })
-  user: UserModel[];
+  @Prop({ type: SchemaTypes.ObjectId, ref: UserModel.name })
+  user: Types.ObjectId;
 }
 
 export const AuthSchema = SchemaFactory.createForClass(AuthModel);

@@ -1,7 +1,35 @@
 version: 2.1
 orbs:
   node: circleci/node@3.0.0
+  docker: circleci/docker@1.4.0
+  dotenv: anilanar/dotenv@volatile
+
+jobs:
+  build-and-publish-docker-image:
+    environment:
+      DOCKER_IMAGE: truongvn/trello-nestjs
+      DOCKER_TAG: latest
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - dotenv/source:
+          path: .env
+      - docker/build:
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+
+
+  #deploy-vps:
 workflows:
-  node-tests:
+  docker-init:
     jobs:
-      - node/test
+      - build-and-publish-docker-imageœ

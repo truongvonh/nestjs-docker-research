@@ -4,11 +4,14 @@ import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import { config } from 'aws-sdk';
 
 const PORT = process.env.APP_PORT || 8000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({ origin: 'http://localhost:3000', credentials: true });
 
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
@@ -32,9 +35,17 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, options);
 
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('swagger', app, document);
 
   app.use(cookieParser());
+
+  const configService = app.get(ConfigService);
+  config.update({
+    accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
+    secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
+    region: configService.get('AWS_REGION'),
+  });
+
   await app.listen(PORT);
 
   Logger.log(`Server start with port: ${PORT}`);

@@ -2,6 +2,7 @@ FROM node:12.18.3 As development
 
 WORKDIR /usr/src/app
 COPY package*.json ./
+COPY yarn* ./
 
 #RUN npm install pm2 -g
 
