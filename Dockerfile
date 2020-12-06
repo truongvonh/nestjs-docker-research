@@ -6,8 +6,8 @@ COPY yarn* ./
 
 #RUN npm install pm2 -g
 
-#RUN npm install --only=development
-RUN yarn --only=development
+RUN npm install --only=development
+#RUN yarn --only=development
 
 COPY . .
 
@@ -31,7 +31,7 @@ COPY . .
 #COPY --from=development /usr/src/app/dist ./dist
 COPY --from=development . ./dist
 
-RUN yarn  --only=production
+#RUN yarn  --only=production
 
 RUN yarn build
 
