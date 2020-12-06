@@ -30,7 +30,7 @@ RUN yarn  --only=production
 COPY . .
 
 #COPY --from=development /usr/src/app/dist ./dist
-COPY --from=development /dist ./dist
+COPY --from=development . ./dist
 
 RUN yarn build
 
