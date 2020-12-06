@@ -30,4 +30,4 @@ jobs:
 workflows:
   docker-init:
     jobs:
-      - build-and-publish-docker-imageœ
+      - build-and-publish-docker-image
