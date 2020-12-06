@@ -20,12 +20,12 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
-#COPY package*.json ./
+COPY package*.json ./
 COPY yarn.* ./
 
-#RUN npm install  --only=production
+RUN npm install --production
 
-COPY . .
+#COPY . .
 
 #COPY --from=development /usr/src/app/dist ./dist
 COPY --from=development . ./dist
