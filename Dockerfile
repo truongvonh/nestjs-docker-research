@@ -5,9 +5,8 @@ COPY package*.json ./
 COPY yarn* ./
 
 #RUN npm install pm2 -g
-
 RUN npm install --only=development
-#RUN yarn --only=development
+RUN yarn --only=development
 
 COPY . .
 
