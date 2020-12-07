@@ -36,7 +36,7 @@ jobs:
           fingerprints:
             - $SSH_FINGER_PRINT_KEY
       - run:
-          command: ssh -oStrictHostKeyChecking=no -v truongvn@128.199.82.27
+          command: ssh -oStrictHostKeyChecking=no -v circleci@128.199.82.27
       - run:
           command: |
             docker-compose stop
