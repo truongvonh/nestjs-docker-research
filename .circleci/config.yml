@@ -48,4 +48,5 @@ workflows:
   docker-init:
     jobs:
       - build-and-publish-docker-image
+      - deploy-job
 #      - deploy-digital-ocean-vps
