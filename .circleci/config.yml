@@ -31,11 +31,12 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - $FINGER_PRINT_KEY
-      - run: ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOYED_SERVER bash -c '
-              docker-compose stop
-              docker-compose rm -f
-              docker-compose pull
-              docker-compose up -d
+      - run: |
+            ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOYED_SERVER
+            docker-compose stop
+            docker-compose rm -f
+            docker-compose pull
+            docker-compose up -d
 
 
 workflows:
