@@ -39,7 +39,7 @@ jobs:
       - run:
           command: |
 #            ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOY_IP
-            ssh -oStrictHostKeyChecking=no circleci@$128.199.82.27
+            ssh -oStrictHostKeyChecking=no 'circleci@$128.199.82.27'
             docker-compose stop
             docker-compose rm -f
             docker-compose pull
