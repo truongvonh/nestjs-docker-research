@@ -26,11 +26,16 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-  deploy-digital-ocean-vps:
+  deploy-job:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - $FINGER_PRINT_KEY
+            - "SO:ME:FIN:G:ER:PR:IN:T"
+#  deploy-digital-ocean-vps:
+#    steps:
+#      - add_ssh_keys:
+#          fingerprints:
+#            - $FINGER_PRINT_KEY
 #      - run: |
 #            ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOYED_SERVER
 #            docker-compose stop
