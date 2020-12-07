@@ -39,7 +39,6 @@ jobs:
           command: ssh -oStrictHostKeyChecking=no -v truongvn@128.199.82.27
       - run:
           command: |
-#            ssh -oStrictHostKeyChecking=no -v $DEPLOYED_USER@$DEPLOY_IP
             docker-compose stop
             docker-compose rm -f
             docker-compose pull
