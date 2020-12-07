@@ -37,8 +37,8 @@ jobs:
             - $FINGER_PRINT_KEY
       - run:
           command: |
-            echo $DEPLOYED_USER
-            ssh -oStrictHostKeyChecking=no ${DEPLOYED_USER}@${DEPLOY_IP}
+#            ssh -oStrictHostKeyChecking=no ${DEPLOYED_USER}@${DEPLOY_IP}
+            ssh -oStrictHostKeyChecking=no truongvn@128.199.82.27
             docker-compose stop
             docker-compose rm -f
             docker-compose pull
