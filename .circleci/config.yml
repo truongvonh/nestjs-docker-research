@@ -37,7 +37,7 @@ jobs:
             - $FINGER_PRINT_KEY
       - run:
           command: |
-            ssh -oStrictHostKeyChecking=no ${DEPLOYED_USER}@${DEPLOYED_SERVER}
+            ssh -oStrictHostKeyChecking=no ${DEPLOYED_USER}@${DEPLOY_IP}
             docker-compose stop
             docker-compose rm -f
             docker-compose pull
@@ -48,4 +48,6 @@ workflows:
   docker-init:
     jobs:
       - build-and-publish-docker-image
-      - deploy-digital-ocean-vps
+      - deploy-digital-ocean-vps:
+          requires:
+            - build-and-publish-docker-image
