@@ -29,8 +29,7 @@ jobs:
   deploy-digital-ocean-vps:
     steps:
       - add_ssh_keys:
-          fingerprints:
-            - $FINGER_PRINT_KEY
+          fingerprints: $FINGER_PRINT_KEY
       - run: |
             ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOYED_SERVER
             docker-compose stop
