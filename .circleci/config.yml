@@ -26,27 +26,26 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-  deploy-job:
+
+
+
+  deploy-digital-ocean-vps:
+    executor: docker/docker
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "SO:ME:FIN:G:ER:PR:IN:T"
-#  deploy-digital-ocean-vps:
-#    steps:
-#      - add_ssh_keys:
-#          fingerprints:
-#            - $FINGER_PRINT_KEY
-#      - run: |
-#            ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOYED_SERVER
-#            docker-compose stop
-#            docker-compose rm -f
-#            docker-compose pull
-#            docker-compose up -d
+            - $FINGER_PRINT_KEY
+      - run:
+          command: |
+            ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOYED_SERVER
+            docker-compose stop
+            docker-compose rm -f
+            docker-compose pull
+            docker-compose up -d
 
 
 workflows:
   docker-init:
     jobs:
       - build-and-publish-docker-image
-      - deploy-job
-#      - deploy-digital-ocean-vps
+      - deploy-digital-ocean-vps
