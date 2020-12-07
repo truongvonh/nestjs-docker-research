@@ -13,6 +13,8 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
       - docker/check
       - dotenv/source:
           path: .env
@@ -27,14 +29,12 @@ jobs:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
 
-
-
   deploy-digital-ocean-vps:
     executor: docker/docker
     steps:
       - add_ssh_keys:
           fingerprints:
-            - $FINGER_PRINT_KEY
+            - $SSH_FINGER_PRINT_KEY
       - run:
           command: |
             ssh -oStrictHostKeyChecking=no ${DEPLOYED_USER}@${DEPLOY_IP}
