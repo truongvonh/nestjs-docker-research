@@ -35,7 +35,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - $SSH_FINGER_PRINT_KEY
-œ      - run:
+      - run:
           command: |
             ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOY_IP
             docker-compose stop
