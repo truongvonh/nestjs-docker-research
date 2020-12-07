@@ -26,8 +26,20 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-  #deploy-vps:
+  deploy-digital-ocean-vps:
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - $FINGER_PRINT_KEY
+      - run: ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOYED_SERVER bash -c '
+              docker-compose stop
+              docker-compose rm -f
+              docker-compose pull
+              docker-compose up -d
+
+
 workflows:
   docker-init:
     jobs:
       - build-and-publish-docker-image
+      - deploy-digital-ocean-vps
