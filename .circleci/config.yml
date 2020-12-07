@@ -34,16 +34,14 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-#            - $SSH_FINGER_PRINT_KEY
-            - 32:53:6d:df:bd:02:3b:00:bc:99:ec:d4:d4:44:b6:74
-      - run: ssh -oStrictHostKeyChecking=no circleci@128.199.82.27
-#      - run:
-#          command: |
-##            ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOY_IP
-#            docker-compose stop
-#            docker-compose rm -f
-#            docker-compose pull
-#            docker-compose up -d
+            - $SSH_FINGER_PRINT_KEY
+      - run:
+          command: |
+            ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOY_IP
+            docker-compose stop
+            docker-compose rm -f
+            docker-compose pull
+            docker-compose up -d
 
 workflows:
   docker-init:
