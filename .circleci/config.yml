@@ -34,7 +34,8 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - $SSH_FINGER_PRINT_KEY
+#            - $SSH_FINGER_PRINT_KEY
+            - "32:53:6d:df:bd:02:3b:00:bc:99:ec:d4:d4:44:b6:74"
       - run:
           command: |
             ssh -oStrictHostKeyChecking=no -v $DEPLOYED_USER@$DEPLOY_IP
