@@ -33,7 +33,8 @@ jobs:
     executor: docker/docker
     steps:
       - add_ssh_keys
-      - run: ssh -oStrictHostKeyChecking=no -v circleci@128.199.82.27
+      - run: ssh-keyscan -H $DEPLOY_IP >> ~/.ssh/known_hosts
+      - run: ssh -oStrictHostKeyChecking=no -v $DEPLOY_USER@$DEPLOY_IP
       - run:
           command: |
             docker-compose stop
