@@ -13,8 +13,8 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+#      - setup_remote_docker:
+#          docker_layer_caching: true
       - docker/check
       - dotenv/source:
           path: .env
@@ -28,7 +28,6 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-
 
   deploy-digital-ocean-vps:
     executor: docker/docker
