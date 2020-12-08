@@ -32,9 +32,7 @@ jobs:
   deploy-digital-ocean-vps:
     executor: docker/docker
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "32:53:6d:df:bd:02:3b:00:bc:99:ec:d4:d4:44:b6:74"
+      - add_ssh_keys
       - run: ssh -oStrictHostKeyChecking=no -v $DEPLOYED_USER@$DEPLOY_IP
       - run:
           command: |
