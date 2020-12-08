@@ -29,6 +29,7 @@ jobs:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
 
+
   deploy-digital-ocean-vps:
     executor: docker/docker
     steps:
