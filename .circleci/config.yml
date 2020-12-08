@@ -34,7 +34,8 @@ jobs:
     steps:
       - add_ssh_keys
       - run: ssh-keyscan -H $DEPLOY_IP >> ~/.ssh/known_hosts
-      - run: ssh -oStrictHostKeyChecking=no -v $DEPLOYED_USER@$DEPLOY_IP
+#      - run: ssh -oStrictHostKeyChecking=no -v $DEPLOYED_USER@$DEPLOY_IP
+      - run: ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOY_IP
       - run:
           command: |
             docker-compose stop
@@ -45,7 +46,8 @@ jobs:
 workflows:
   docker-init:
     jobs:
-      - build-and-publish-docker-image
-      - deploy-digital-ocean-vps:
-          requires:
-            - build-and-publish-docker-image
+      - deploy-digital-ocean-vps
+#      - build-and-publish-docker-image
+#      - deploy-digital-ocean-vps:
+#          requires:
+#            - build-and-publish-docker-image
