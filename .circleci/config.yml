@@ -38,10 +38,16 @@ jobs:
       - run: ssh -oStrictHostKeyChecking=no $DEPLOYED_USER@$DEPLOY_IP
       - run:
           command: |
-            docker-compose stop
-            docker-compose rm -f
-            docker-compose pull
-            docker-compose up -d
+            cd /app/server/nestjs-docker-research
+            git fetch
+            git pull origin master
+
+#      - run:
+#          command: |
+#            docker-compose stop
+#            docker-compose rm -f
+#            docker-compose pull
+#            docker-compose up -d
 
 workflows:
   docker-init:
