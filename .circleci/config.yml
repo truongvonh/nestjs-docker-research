@@ -34,8 +34,8 @@ jobs:
     steps:
       - add_ssh_keys
       - run: ssh-keyscan -H $DEPLOY_IP >> ~/.ssh/known_hosts
-#      - run: ssh -oStrictHostKeyChecking=no -v $DEPLOYED_USER@$DEPLOY_IP
       - run: ssh -oStrictHostKeyChecking=no -v $DEPLOYED_USER@$DEPLOY_IP './scripts/deploy.sh'
+
 #      - run:
 #          command: |
 #            docker-compose stop
