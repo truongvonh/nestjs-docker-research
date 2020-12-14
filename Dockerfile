@@ -22,7 +22,7 @@ COPY yarn.* ./
 #RUN yarn --production
 RUN yarn
 
-COPY --from=production . ./dist
+COPY --from=development . ./dist
 
 RUN yarn build
 
