@@ -9,8 +9,6 @@ RUN yarn
 
 COPY . .
 
-CMD ["npm", "run", "start"]
-
 FROM node:12.13-alpine AS production
 
 ARG NODE_ENV=production
