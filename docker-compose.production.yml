@@ -5,13 +5,15 @@ services:
     container_name: nest-docker
     build:
       context: .
-      target: development
+      target: production
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - ${APP_PORT}:${APP_PORT}
-    command: npm run start:prod
+#    command:
+#      - npm run build
+#      - npm run start:prod
     env_file:
       - .env
 #    network_mode: 'host'
