@@ -25,6 +25,8 @@ COPY --from=development . ./dist
 
 RUN yarn build
 
+RUN ls -l
+
 CMD ["node", "dist/main"]
 
 #CMD ["pm2-runtime", "dist/main"]
