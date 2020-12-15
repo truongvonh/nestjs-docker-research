@@ -1,6 +1,6 @@
 FROM node:12.13-alpine AS development
 
-WORKDIR /usr/src/app
+# WORKDIR /usr/src/app
 COPY package*.json ./
 COPY yarn.* ./
 #RUN yarn --only=development
@@ -13,7 +13,7 @@ FROM node:12.13-alpine AS production
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-WORKDIR /usr/src/app
+# WORKDIR /usr/src/appß
 
 COPY package*.json ./
 COPY yarn.* ./
