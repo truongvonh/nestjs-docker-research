@@ -1,8 +1,8 @@
 FROM node:12.13-alpine AS development
 
 WORKDIR /usr/src/app
-COPY package*.json ./
-COPY yarn.* ./
+COPY package.json ./
+# COPY yarnß ./
 #RUN yarn --only=development
 RUN yarn
 
