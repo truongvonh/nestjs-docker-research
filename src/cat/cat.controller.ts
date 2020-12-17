@@ -18,7 +18,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class CatController {
   constructor(private catService: CatService) {}
 
-  @ApiOperation({ summary: 'Get all cats!' })
+  @ApiOperation({ summary: 'Get all cats' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Forbidden.' })
   @Get()
   async findAll(@Req() request: Request, @Res() res: Response) {
