@@ -13,14 +13,17 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
-#      - setup_remote_docker:
-#          docker_layer_caching: true
+      #      - setup_remote_docker:
+      #          docker_layer_caching: true
       - docker/check
       - dotenv/source:
           path: .env
       - docker/build:
+          cache_from: '$DOCKER_IMAGE/$DOCKER_TAG'
+          extra_build_args: '--target production'
           image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
+
       - docker/push:
           digest-path: /tmp/digest.txt
           image: $DOCKER_IMAGE
@@ -46,8 +49,8 @@ jobs:
 workflows:
   docker-init:
     jobs:
-      - deploy-digital-ocean-vps
-#      - build-and-publish-docker-image
+      # - deploy-digital-ocean-vps
+      - build-and-publish-docker-image
 #      - deploy-digital-ocean-vps:
 #          requires:
 #            - build-and-publish-docker-image
