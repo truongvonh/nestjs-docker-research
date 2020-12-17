@@ -3,9 +3,10 @@ version: '3.7'
 services:
   main:
     container_name: nest-docker
-    build:
-      context: .
-      target: production
+    image: truongvn/trello-nestjs
+    # build:
+    #   context: .
+    #   target: production
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
