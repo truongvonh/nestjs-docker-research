@@ -8,4 +8,6 @@ export enum ERRORS_MESSAGE {
 
   REDIS_ERROR_GET_KEY = 'Have a error when get caching',
   REDIS_ERROR_SET_KEY = 'Have a error when set caching',
+
+  NOT_OBJECT_OWNER = 'Can not process because you not the owner!',
 }

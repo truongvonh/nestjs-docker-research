@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, SchemaTypes, Types } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserModel } from '../users/user.schema';
 
 export class FileType {
   ext: string;
@@ -15,11 +16,11 @@ export class FileModel extends Document {
 
   @ApiProperty()
   @Prop({ type: String, required: true })
-  url: string;
+  key: string;
 
   @ApiProperty()
-  @Prop({ type: String, required: true })
-  key: string;
+  @Prop({ type: SchemaTypes.ObjectId, ref: UserModel.name, required: true })
+  owner: Types.ObjectId;
 }
 
 export const FileSchema = SchemaFactory.createForClass(FileModel);
