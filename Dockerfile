@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN yarn 
+RUN npm i --development
 
 #COPY . .
 
@@ -26,7 +26,7 @@ RUN ls -l
 RUN npm i --production
 #RUN yarn
 
-RUN yarn build
+RUN npm build
 
 #COPY --from=development . ./dist
 COPY . ./dist
