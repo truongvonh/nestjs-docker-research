@@ -18,7 +18,7 @@ jobs:
       - dotenv/source:
           path: .env
       - docker/build:
-#          cache_from: '$DOCKER_IMAGE/$DOCKER_TAG'
+          cache_from: '$DOCKER_IMAGE/$DOCKER_TAG'
           extra_build_args: '--no-cache --target production'
           image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
@@ -36,7 +36,7 @@ jobs:
     steps:
       - add_ssh_keys
       - run: ssh-keyscan -H $DEPLOY_IP >> ~/.ssh/known_hosts
-      - run: ssh -oStrictHostKeyChecking=no -v $DEPLOYED_USER@$DEPLOY_IP './scripts/deploy.sh'
+      - run: ssh -oStrictHostKeyChecking=no -v $DEPLOYED_USER@$DEPLOY_IP './scripts/deploy-v2.sh'
 
 workflows:
   docker-init:
