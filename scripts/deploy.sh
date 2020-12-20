@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-git fetch
-git pull origin master
+docker-compose stop
+docker-compose rm -f
+docker-compose pull
+docker-compose up -d --build
