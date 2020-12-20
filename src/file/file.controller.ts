@@ -19,7 +19,7 @@ import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SUCCESS_MESSAGE } from '../constants/messages/success';
 
-@ApiTags('File Endpoint')
+@ApiTags('File Endpoint v2')
 @Controller('file')
 export class FileController {
   constructor(
@@ -28,7 +28,7 @@ export class FileController {
   ) {}
 
   @UseGuards(JwtAuthenticationGuard)
-  @ApiOperation({ summary: 'Upload file production v1' })
+  @ApiOperation({ summary: 'Upload file production' })
   @UseInterceptors(FileInterceptor('file'))
   @Post()
   public async uploadFile(@UploadedFile() file, @Res() res) {
