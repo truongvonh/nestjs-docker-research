@@ -26,6 +26,9 @@ jobs:
           digest-path: /tmp/digest.txt
           image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
 
   deploy-digital-ocean-vps:
     executor: docker/docker
