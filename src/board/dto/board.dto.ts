@@ -1,4 +1,12 @@
-import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserModel } from '../../users/user.schema';
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';

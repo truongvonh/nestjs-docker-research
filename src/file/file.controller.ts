@@ -28,7 +28,7 @@ export class FileController {
   ) {}
 
   @UseGuards(JwtAuthenticationGuard)
-  @ApiOperation({ summary: 'Upload file production' })
+  @ApiOperation({ summary: 'Upload file production v1' })
   @UseInterceptors(FileInterceptor('file'))
   @Post()
   public async uploadFile(@UploadedFile() file, @Res() res) {
