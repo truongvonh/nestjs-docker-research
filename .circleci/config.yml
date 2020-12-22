@@ -18,7 +18,7 @@ jobs:
       - dotenv/source:
           path: .env
       - docker/build:
-          extra_build_args: '--no-cache --target production'
+          extra_build_args: '--no-cache --rm --target production'
           image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
 
@@ -26,9 +26,6 @@ jobs:
           digest-path: /tmp/digest.txt
           image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
-#      - run:
-#          command: |
-#            echo "Digest is: $(</tmp/digest.txt)"
 
   deploy-digital-ocean-vps:
     executor: docker/docker

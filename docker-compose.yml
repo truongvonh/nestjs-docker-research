@@ -12,38 +12,29 @@ services:
       - /usr/src/app/node_modules
     ports:
       - ${APP_PORT}:${APP_PORT}
-#    command:
-#      - npm run build
-#      - npm run start:prod
+
     env_file:
       - .env
-#    network_mode: 'host'
-#    networks:
-#      - web-nest
     depends_on:
       - redis
       - database
   redis:
     container_name: redis
     image: redis
-#    network_mode: 'host'
-#    networks:
-#      - web-nest
     ports:
       - '6379:6379'
+    volumes:
+      - '.:/var/lib/redis'
   database:
     container_name: mongo
     image: mongo
     restart: always
-#    network_mode: 'host'
-#    networks:
-#      - web-nest
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - '27017:27017'
+    volumes:
+      - '.:/var/lib/mongo:rw'
 #networks:
 #  web-nest:
-#volumes:
-#  pgdata:

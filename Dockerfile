@@ -26,7 +26,7 @@ RUN ls -l
 RUN npm i --production
 #RUN yarn
 
-RUN npm build
+RUN npm run build
 
 #COPY --from=development . ./dist
 COPY . ./dist
