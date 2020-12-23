@@ -20,7 +20,6 @@ services:
       - '6379:6379'
     volumes:
       - '.:/var/lib/redis'
-      -
   database:
     container_name: mongo
     image: mongo
