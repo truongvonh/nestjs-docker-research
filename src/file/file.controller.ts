@@ -19,7 +19,7 @@ import { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SUCCESS_MESSAGE } from '../constants/messages/success';
 
-@ApiTags('File Endpoint v8')
+@ApiTags('File Endpoint v12')
 @Controller('file')
 export class FileController {
   constructor(
