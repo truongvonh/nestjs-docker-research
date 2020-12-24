@@ -4,22 +4,26 @@ services:
   main:
     container_name: nest-docker
     image: truongvn/trello-nestjs
-
     ports:
       - ${APP_PORT}:${APP_PORT}
-
+    networks:
+      - app-network
     env_file:
       - .env
     depends_on:
       - redis
       - database
+
   redis:
     container_name: redis
     image: redis
     ports:
       - '6379:6379'
+    networks:
+      - app-network
     volumes:
       - '.:/var/lib/redis'
+
   database:
     container_name: mongo
     image: mongo
@@ -29,7 +33,60 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - '27017:27017'
+    networks:
+      - app-network
     volumes:
       - '.:/var/lib/mongo:rw'
+
+  web-server:
+    container_name: web-server
+    image: nginx:mainline-alpine
+      container_name: webserver
+      restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - web-root:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - dhparam:/etc/ssl/certs
+    depends_on:
+      - nest-docker
+    networks:
+      - app-network
+
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - web-server
+    command: certonly --webroot --webroot-path=/var/www/html --email vonhattruong250695@gmail.com --agree-tos --no-eff-email --staging -d api.trello-clone.tk  -d www.api.trello-clone.tk
+
+volumes:
+  certbot-etc:
+  certbot-var:
+  dhparam:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/app/nest-docker/dhparam/
+      o: bind
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/app/nest-docker/
+      o: bind
+
+networks:
+  app-network:
+    driver: bridge
 
 
