@@ -50,12 +50,11 @@ services:
       - ./nginx-conf:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-#      - dhparam:/etc/ssl/certs
+      - dhparam:/etc/ssl/certs
     depends_on:
       - main
     networks:
       - app-network
-
 
   certbot:
     image: certbot/certbot
