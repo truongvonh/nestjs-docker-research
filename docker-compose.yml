@@ -39,10 +39,9 @@ services:
       - '.:/var/lib/mongo:rw'
 
   webserver:
-    container_name: webserver
     image: nginx:mainline-alpine
-      container_name: webserver
-      restart: unless-stopped
+    container_name: webserver
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
