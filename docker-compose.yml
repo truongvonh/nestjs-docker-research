@@ -52,7 +52,7 @@ services:
       - certbot-var:/var/lib/letsencrypt
       - dhparam:/etc/ssl/certs
     depends_on:
-      - nest-docker
+      - main
     networks:
       - app-network
 
