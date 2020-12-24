@@ -38,8 +38,8 @@ services:
     volumes:
       - '.:/var/lib/mongo:rw'
 
-  web-server:
-    container_name: web-server
+  webserver:
+    container_name: webserver
     image: nginx:mainline-alpine
       container_name: webserver
       restart: unless-stopped
@@ -66,7 +66,7 @@ services:
       - certbot-var:/var/lib/letsencrypt
       - web-root:/var/www/html
     depends_on:
-      - web-server
+      - webserver
     command: certonly --webroot --webroot-path=/var/www/html --email vonhattruong250695@gmail.com --agree-tos --no-eff-email --staging -d api.trello-clone.tk  -d www.api.trello-clone.tk
 
 volumes:
