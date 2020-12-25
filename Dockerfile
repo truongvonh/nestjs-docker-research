@@ -1,14 +1,10 @@
 FROM node:12.13-alpine AS development
 
 WORKDIR /usr/src/app
-#COPY package.json ./
-#COPY yarn.* ./
 
 COPY . .
 
 RUN npm i --development
-
-#COPY . .
 
 FROM node:12.13-alpine AS production
 
@@ -18,8 +14,6 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /usr/src/app
 
 COPY . .
-#COPY package*.json ./
-#COPY yarn.* ./
 
 RUN ls -l
 
@@ -28,7 +22,6 @@ RUN npm i --production
 
 RUN npm run build
 
-#COPY --from=development . ./dist
 COPY . ./dist
 
 RUN ls -l
