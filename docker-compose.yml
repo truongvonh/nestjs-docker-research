@@ -38,23 +38,23 @@ services:
     volumes:
       - '.:/var/lib/mongo:rw'
 
-  webserver:
-    image: nginx:mainline-alpine
-    container_name: webserver
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - web-root:/var/www/html
-      - ./nginx-conf:/etc/nginx/conf.d
-#      - certbot-etc:/etc/letsencrypt
-#      - certbot-var:/var/lib/letsencrypt
-#      - dhparam:/etc/ssl/certs
-    depends_on:
-      - main
-    networks:
-      - app-network
+#  webserver:
+#    image: nginx:mainline-alpine
+#    container_name: webserver
+#    restart: unless-stopped
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - web-root:/var/www/html
+#      - ./nginx-conf:/etc/nginx/conf.d
+##      - certbot-etc:/etc/letsencrypt
+##      - certbot-var:/var/lib/letsencrypt
+##      - dhparam:/etc/ssl/certs
+#    depends_on:
+#      - main
+#    networks:
+#      - app-network
 
 #  certbot:
 #    image: certbot/certbot
