@@ -44,13 +44,11 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-#      - "443:443"
+      - "443:443"
     volumes:
-      - web-root:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - dhparam:/etc/ssl/certs
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     depends_on:
       - main
     networks:
@@ -61,29 +59,11 @@ services:
     container_name: certbot
     restart: always
     volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/html
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     depends_on:
       - webserver
-#    command: certonly --webroot --webroot-path=/var/www/html --email vonhattruong250695@gmail.com --agree-tos --no-eff-email --staging -d trello-clone.dev  -d www.trello-clone.dev
-    command: certbot --nginx -d trello-clone.dev -d www.trello-clone.dev
-
-volumes:
-  certbot-etc:
-  certbot-var:
-  dhparam:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/app/nest-docker/dhparam/
-      o: bind
-  web-root:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/app/nest-docker/
-      o: bind
 
 networks:
   app-network:
