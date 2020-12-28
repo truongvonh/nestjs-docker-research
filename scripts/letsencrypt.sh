@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-domains=(trello-clone.dev www.trello-clone.dev) # Specify domains here or use the -d argument
+#domains=(trello-clone.dev www.trello-clone.dev) # Specify domains here or use the -d argument
+domains=(trello-clone.dev) # Specify domains here or use the -d argument
 data_path="./certbot" # Specify data path here or use the --data-path argument
 email="vonhattruong250695@gmail.com" # Specify email here or use the --email argument
 staging=0 # Set to 1 here or use the --staging argument
