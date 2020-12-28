@@ -1,5 +1,6 @@
 # compiled output
 /dist
+/certbot
 /node_modules
 
 # Logs
