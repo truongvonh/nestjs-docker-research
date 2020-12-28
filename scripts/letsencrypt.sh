@@ -56,7 +56,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Make sure at least one domain has been configured
-if [ "${domains[0]}" == "trello-clone.dev" ] || [ "${domains[0]}" == "" ]; then
+if [ "${domains[0]}" == "example.com" ] || [ "${domains[0]}" == "" ]; then
   echo "Error: You must specify at least one domain."
   exit 1
 fi
