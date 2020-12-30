@@ -4,8 +4,9 @@ services:
   main:
     container_name: nest-docker
     image: truongvn/trello-nestjs
+    restart: always
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - '4000:4000'
     networks:
       - app-network
     env_file:
@@ -40,7 +41,7 @@ services:
 
 networks:
   app-network:
-    driver: bridge
+    driver: overlay
 
 
 

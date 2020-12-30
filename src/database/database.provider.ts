@@ -4,7 +4,7 @@ import { COMMON_NAME_SPACE } from '../constants/common';
 
 export const uri = `mongodb://${process.env.DB_USER}:${
   process.env.DB_PASSWORD
-}@mongo:27017`;
+}localhost:27017`;
 
 export const DatabaseProvider = [
   {
@@ -19,4 +19,3 @@ export const DatabaseProvider = [
     },
   },
 ];
-// @ts-ignore

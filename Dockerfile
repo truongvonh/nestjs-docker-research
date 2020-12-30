@@ -25,7 +25,6 @@ RUN npm run build
 COPY . ./dist
 
 RUN ls -l
-RUN pwd
 
-CMD ["pm2-runtime", "dist/main.js", "-i", "max", "--only", "nest-docker-pm2"]œ
+CMD ["pm2-runtime", "dist/main.js", "-i", "max", "--only", "nest-docker-pm2"]
 
