@@ -14,33 +14,20 @@ services:
     command: npm run start:dev
     env_file:
       - .env
-#    network_mode: 'host'
-#    networks:
-#      - web-nest
     depends_on:
       - redis
       - database
   redis:
     container_name: redis
     image: redis
-#    network_mode: 'host'
-#    networks:
-#      - web-nest
     ports:
       - '6379:6379'
   database:
     container_name: mongo
     image: mongo
     restart: always
-#    network_mode: 'host'
-#    networks:
-#      - web-nest
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - '27017:27017'
-#networks:
-#  web-nest:
-#volumes:
-#  pgdata:
