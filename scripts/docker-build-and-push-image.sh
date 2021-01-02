@@ -8,3 +8,5 @@ docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VER --target production .
 docker image prune -f
 
 docker push $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VER
+
+

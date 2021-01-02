@@ -75,5 +75,3 @@ export class AuthController {
     return res.status(HttpStatus.OK).json(SUCCESS_MESSAGE.OK);
   }
 }
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmMyNzM5Mzk3MDE1ZDAxYThmZjI1OTUiLCJpYXQiOjE2MDY1Nzk4OTksImV4cCI6MTYwNzQ3OTg5OX0.S2fCNB90tJtQ9CnLFlV23DuIYTUgip1tZHw1o4a4KIg

@@ -49,7 +49,6 @@ networks:
   app-network:
     name: trello-nest-network-attach
     attachable: true
-#    driver: overlay
 
 
 
