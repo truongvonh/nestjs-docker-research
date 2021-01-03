@@ -4,8 +4,9 @@ services:
   main:
     container_name: nest-docker
     image: truongvn/trello-nestjs
+    restart: always
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - '4000:4000'
     networks:
       - app-network
     env_file:
@@ -13,6 +14,12 @@ services:
     depends_on:
       - redis
       - database
+    deploy:
+      mode: replicated
+      update_config:
+        order: start-first
+        failure_action: rollback
+        delay: 1s
 
   redis:
     container_name: redis
@@ -40,7 +47,9 @@ services:
 
 networks:
   app-network:
-    driver: bridge
+    name: trello-nest-network-attach
+    attachable: true
+#    driver: overlay
 
 
 
