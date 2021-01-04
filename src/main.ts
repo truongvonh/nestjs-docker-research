@@ -9,9 +9,11 @@ import { config } from 'aws-sdk';
 
 const PORT = process.env.APP_PORT || 8000;
 
+const corsArr = ['http://localhost:3000', 'https://trello-clone.dev'];
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors({ origin: 'http://localhost:3000', credentials: true });
+  app.enableCors({ origin: corsArr, credentials: true });
 
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
