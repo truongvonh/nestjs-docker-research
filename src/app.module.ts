@@ -15,6 +15,7 @@ import { BoardModule } from './board/board.module';
 import { RedisModule } from 'nestjs-redis';
 import { REDIS_OPTIONS } from './database/redis/redis.options';
 import { FileModule } from './file/file.module';
+import { SentryInterceptor } from './shared/sentry.interceptor';
 
 @Module({
   imports: [
@@ -37,6 +38,10 @@ import { FileModule } from './file/file.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SentryInterceptor,
     },
   ],
 })
