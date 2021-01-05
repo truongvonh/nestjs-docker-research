@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@nestjs/cli": "^6.9.0",
+    "nest-raven": "7.0.0",
     "@nestjs/common": "^6.7.2",
     "@nestjs/config": "^0.5.0",
     "@nestjs/core": "^6.7.2",

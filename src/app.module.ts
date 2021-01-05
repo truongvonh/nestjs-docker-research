@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpException, Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AppController } from './app.controller';
@@ -15,7 +15,7 @@ import { BoardModule } from './board/board.module';
 import { RedisModule } from 'nestjs-redis';
 import { REDIS_OPTIONS } from './database/redis/redis.options';
 import { FileModule } from './file/file.module';
-import { SentryInterceptor } from './shared/sentry.interceptor';
+import { RavenInterceptor } from 'nest-raven';
 
 @Module({
   imports: [
@@ -39,10 +39,17 @@ import { SentryInterceptor } from './shared/sentry.interceptor';
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: SentryInterceptor,
-    // },
+    {
+      provide: APP_INTERCEPTOR,
+      useValue: new RavenInterceptor({
+        filters: [
+          {
+            type: HttpException,
+            filter: (exception: HttpException) => 500 > exception.getStatus(),
+          },
+        ],
+      }),
+    },
   ],
 })
 export class AppModule {}
