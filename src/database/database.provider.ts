@@ -6,11 +6,11 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const MONGO_NAME_BY_ENV = isProduction ? 'trello-nest-stack_database' : 'mongo';
 
-export const uri = `mongodb://${process.env.DB_USER}:${
-  process.env.DB_PASSWORD
-}@${MONGO_NAME_BY_ENV}:27017`;
-
-// export const uri = `mongodb://${MONGO_NAME_BY_ENV}:27017`;
+export const uri = isProduction
+  ? `mongodb://${MONGO_NAME_BY_ENV}:27017`
+  : `mongodb://${process.env.DB_USER}:${
+      process.env.DB_PASSWORD
+    }@${MONGO_NAME_BY_ENV}:27017`;
 
 export const DatabaseProvider = [
   {
