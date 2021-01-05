@@ -44,6 +44,7 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
+
     try {
       const accessToken = await bcrypt.hash(registerDTO.password, SALT_LENGTH);
       registerUser = await this.userService.createNewUser(registerDTO);

@@ -7,6 +7,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'aws-sdk';
 import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
 
 const PORT = process.env.APP_PORT || 8000;
 
@@ -43,7 +44,10 @@ async function bootstrap() {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     tracesSampleRate: 1.0,
-    integrations: [new Sentry.Integrations.Http({ tracing: true })],
+    integrations: [
+      new Sentry.Integrations.Http({ tracing: true }),
+      new Tracing.Integrations.Mongo(),
+    ],
   });
 
   app.use(cookieParser());

@@ -39,10 +39,10 @@ import { SentryInterceptor } from './shared/sentry.interceptor';
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: SentryInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: SentryInterceptor,
+    // },
   ],
 })
 export class AppModule {}
