@@ -1,13 +1,14 @@
-FROM node:12.13-alpine AS development
+FROM node:12.18.3-alpine AS development
 
 WORKDIR /usr/src/app
 
 COPY . .
 
+RUN npm cache clean --force
 #RUN npm i --development
 RUN yarn
 
-FROM node:12.13-alpine AS production
+FROM node:12.18.3-alpine AS production
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}

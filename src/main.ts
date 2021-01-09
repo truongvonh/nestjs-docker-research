@@ -23,7 +23,7 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       forbidUnknownValues: true,
-      disableErrorMessages: true,
+      // disableErrorMessages: true,
       validationError: {
         value: false,
       },

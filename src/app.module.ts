@@ -16,6 +16,7 @@ import { RedisModule } from 'nestjs-redis';
 import { REDIS_OPTIONS } from './database/redis/redis.options';
 import { FileModule } from './file/file.module';
 import { RavenInterceptor } from 'nest-raven';
+import { UnsplashModule } from './external/unsplash/unsplash.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { RavenInterceptor } from 'nest-raven';
     UsersModule,
     BoardModule,
     FileModule,
+    UnsplashModule,
   ],
   controllers: [AppController],
   providers: [
