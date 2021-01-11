@@ -4,7 +4,8 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN npm cache clean --force
+RUN cp .env.development .env
+
 #RUN npm i --development
 RUN yarn
 
