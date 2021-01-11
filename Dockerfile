@@ -4,8 +4,6 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN npm cache clean --force
-#RUN npm i --development
 RUN yarn
 
 FROM node:12.18.3-alpine AS production
