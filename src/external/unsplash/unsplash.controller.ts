@@ -5,35 +5,44 @@ import {
   HttpStatus,
   Query,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UnsplashQueryDTO, UnsplashResponseDTO } from './dto/unsplash.dto';
-import JwtAuthenticationGuard from '../../auth/guard/jwt.guard';
 import { Response } from 'express';
 import { stringify } from 'query-string';
-import { AxiosResponse } from 'axios';
+import { AutoMapper, InjectMapper } from 'nestjsx-automapper';
+import { UnsplashModel } from './model/unsplash.model';
 
 @Controller('unsplash')
 @ApiTags('Unsplash Endpoint')
 export class UnsplashController {
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    @InjectMapper() private readonly mapper: AutoMapper,
+  ) {}
 
+  // @UseGuards(JwtAuthenticationGuard)
   @ApiOperation({ summary: 'Get all unsplash image' })
-  @UseGuards(JwtAuthenticationGuard)
   @Get()
   public async getAllPhotos(
     @Query() query: UnsplashQueryDTO,
     @Res() res: Response,
-  ): Promise<UnsplashResponseDTO> {
+  ): Promise<Response<UnsplashResponseDTO>> {
     const parseQuery = stringify({
       client_id: process.env.UNSPLASH_ACCESS_KEY,
       ...query,
     });
-    const imageUnsplash: AxiosResponse = await this.httpService
+
+    const { data } = await this.httpService
       .get(`/photos?${parseQuery}`)
       .toPromise();
 
-    return res.status(HttpStatus.OK).json(imageUnsplash.data);
+    const mapperUnsplash = this.mapper.mapArray(
+      data,
+      UnsplashResponseDTO,
+      UnsplashModel,
+    );
+
+    return res.status(HttpStatus.OK).json(mapperUnsplash);
   }
 }
