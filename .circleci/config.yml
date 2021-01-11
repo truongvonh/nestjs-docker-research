@@ -11,7 +11,6 @@ jobs:
       DOCKER_IMAGE: truongvn/trello-nestjs
       DOCKER_TAG: latest
     executor: docker/docker
-
     steps:
       - setup_remote_docker
       - checkout
@@ -38,7 +37,7 @@ jobs:
 workflows:
   docker-init:
     jobs:
-      - build-and-publish-docker-image:
+      - build-and-publish-docker-image
       - deploy-digital-ocean-vps:
           requires:
             - build-and-publish-docker-image
