@@ -3,17 +3,8 @@ orbs:
   node: circleci/node@3.0.0
   docker: circleci/docker@1.4.0
   dotenv: anilanar/dotenv@volatile
-  setup-env-vars: opensimsim/setup-env-vars@1.0.0
 
 jobs:
-  update-enviroment-variables:
-    executor: setup-env-vars
-    steps:
-      - run:
-          name: 'setting enviroment variable'
-          command: |
-            echo 'export PROFILE_NAME=123213' >> .env
-
   build-and-publish-docker-image:
     environment:
       DOCKER_IMAGE: truongvn/trello-nestjs
@@ -46,7 +37,6 @@ jobs:
 workflows:
   docker-init:
     jobs:
-      - update-enviroment-variables
       - build-and-publish-docker-image
       - deploy-digital-ocean-vps:
           requires:
