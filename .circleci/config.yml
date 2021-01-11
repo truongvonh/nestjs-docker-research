@@ -42,8 +42,8 @@ jobs:
       - setup_remote_docker
       - checkout
       - docker/check
-      - dotenv/source:
-          path: .env
+      #      - dotenv/source:
+      #          path: .env
       - docker/build:
           extra_build_args: '--no-cache --rm --target production'
           image: $DOCKER_IMAGE
