@@ -1,11 +1,15 @@
-import { AutoMapper, Profile, ProfileBase } from 'nestjsx-automapper';
+import { AutoMapper, mapFrom, Profile, ProfileBase } from 'nestjsx-automapper';
 import { UnsplashResponseDTO } from '../dto/unsplash.dto';
-import { UnsplashModel } from '../model/unsplash.model';
+import { UnsplashModel, Urls } from '../model/unsplash.model';
 
 @Profile()
 export class MerchantProfile extends ProfileBase {
   constructor(mapper: AutoMapper) {
     super();
-    mapper.createMap(UnsplashModel, UnsplashResponseDTO);
+    mapper.createMap(Urls, Urls);
+    mapper.createMap(UnsplashModel, UnsplashResponseDTO).forMember(
+      des => des.urls,
+      mapFrom(src => src.urls),
+    );
   }
 }

@@ -1,16 +1,44 @@
 import { AutoMap } from 'nestjsx-automapper';
 
 export class Urls {
-  // @AutoMap()
+  @AutoMap()
   raw: string;
-  // @AutoMap()
+  @AutoMap()
   full: string;
-  // @AutoMap()
+  @AutoMap()
   regular: string;
-  // @AutoMap()
+  @AutoMap()
   small: string;
-  // @AutoMap()
+  @AutoMap()
   thumb: string;
+}
+
+export class ProfileImage {
+  small: string;
+  medium: string;
+  large: string;
+}
+
+export class User {
+  id: string;
+  updated_at: Date;
+  username: string;
+
+  name: string;
+  first_name: string;
+  last_name: string;
+  twitter_username: null;
+  portfolio_url: string;
+  bio: string;
+  location: string;
+  links: UserLinks;
+
+  profile_image: ProfileImage;
+  instagram_username: string;
+  total_collections: number;
+  total_likes: number;
+  total_photos: number;
+  accepted_tos: boolean;
 }
 
 export class UnsplashModel {
@@ -30,7 +58,7 @@ export class UnsplashModel {
 
   alt_description: string;
 
-  @AutoMap(() => Urls)
+  // @AutoMap(() => Urls)
   urls: Urls;
   links: WelcomeLinks;
   categories: any[];
@@ -38,6 +66,7 @@ export class UnsplashModel {
   liked_by_user: boolean;
   current_user_collections: any[];
   sponsorship: null;
+
   user: User;
 }
 
@@ -48,26 +77,6 @@ export class WelcomeLinks {
   download_location: string;
 }
 
-export class User {
-  id: string;
-  updated_at: Date;
-  username: string;
-  name: string;
-  first_name: string;
-  last_name: string;
-  twitter_username: null;
-  portfolio_url: string;
-  bio: string;
-  location: string;
-  links: UserLinks;
-  profile_image: ProfileImage;
-  instagram_username: string;
-  total_collections: number;
-  total_likes: number;
-  total_photos: number;
-  accepted_tos: boolean;
-}
-
 export class UserLinks {
   self: string;
   html: string;
@@ -76,10 +85,4 @@ export class UserLinks {
   portfolio: string;
   following: string;
   followers: string;
-}
-
-export class ProfileImage {
-  small: string;
-  medium: string;
-  large: string;
 }

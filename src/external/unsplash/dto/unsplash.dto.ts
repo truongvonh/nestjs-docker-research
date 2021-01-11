@@ -34,7 +34,8 @@ export class UnsplashResponseDTO {
   description: string;
 
   @AutoMap()
-  created_at: Date;
-  // @AutoMap()
-  // alt_description: string;
+  createdAt: Date;
+
+  @AutoMap(() => Urls)
+  urls: Urls;
 }
