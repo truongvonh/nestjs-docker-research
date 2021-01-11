@@ -1,5 +1,7 @@
 import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { AutoMap } from 'nestjsx-automapper';
+import { Urls } from '../model/unsplash.model';
 
 export enum OrderBy {
   latest = 'latest',
@@ -12,13 +14,13 @@ export class UnsplashQueryDTO {
   @ApiProperty({
     example: '1',
   })
-  readonly page: number;
+  readonly page: string;
 
   @IsString()
   @ApiProperty({
     example: '10',
   })
-  readonly per_page: number;
+  readonly per_page: string;
 
   @IsString()
   @ApiProperty({
@@ -27,4 +29,12 @@ export class UnsplashQueryDTO {
   readonly order_by: OrderBy;
 }
 
-export class UnsplashResponseDTO {}
+export class UnsplashResponseDTO {
+  @AutoMap()
+  description: string;
+
+  @AutoMap()
+  created_at: Date;
+  // @AutoMap()
+  // alt_description: string;
+}

@@ -29,6 +29,7 @@ import { UnsplashModule } from './external/unsplash/unsplash.module';
     BoardModule,
     FileModule,
     UnsplashModule,
+    // AutomapperModule.withMapper(),
   ],
   controllers: [AppController],
   providers: [

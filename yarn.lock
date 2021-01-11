@@ -509,6 +509,13 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@nartc/automapper@7.0.4":
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/@nartc/automapper/-/automapper-7.0.4.tgz#7a7336b7023e882ce0641e54199dd5c3e8a5797f"
+  integrity sha512-0Qax/6nmFuoi66UPVXWayN7DCpR/0UB9MxT3sWHdJEd6ZsbW+IYvs2lpPOg2ypTrWHNzJJqW7cFM+G3eILx7dg==
+  dependencies:
+    lodash.set "4.3.2"
+
 "@nestjs/cli@^6.9.0":
   version "6.14.2"
   resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-6.14.2.tgz#673b2ba3a5cf8f96bfeb27bab078e95e471beaf4"
@@ -6399,6 +6406,13 @@ nestjs-redis@^1.2.8:
     reflect-metadata "^0.1.12"
     rxjs "^6.2.2"
     uuid "^3.3.2"
+
+nestjsx-automapper@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/nestjsx-automapper/-/nestjsx-automapper-3.1.4.tgz#22efba0c10fe6815596fdc84af8cd1a4fd02d215"
+  integrity sha512-uw2edSRb3Dilhu2kYpcjzqh+9EH9mbmulPGr0/KgOwH1MgEBoRg/sSraYFBHwTddN9ZVtQgCcxjfjyCR1fNxaQ==
+  dependencies:
+    "@nartc/automapper" "7.0.4"
 
 netmask@^1.0.6:
   version "1.0.6"
