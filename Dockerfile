@@ -4,7 +4,8 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN yarn
+#RUN yarn
+RUN npm i --development
 
 FROM node:12.18.3-alpine AS production
 

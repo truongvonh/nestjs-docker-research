@@ -6,32 +6,6 @@ orbs:
   persist-env: christeredvartsen/persist-env@0.1.0
 
 jobs:
-  persist-env:
-    machine: true
-    description: Persist all environment variables
-    steps:
-      - run:
-          name: Touch file
-          command: touch .env
-      - run:
-          name: Append to bash environment file
-          command: cat .env >> $BASH_ENV
-
-  #  set-env:
-  #    machine: true
-  #    description: Set an environment variable
-  #    parameters:
-  #      var-name: SOME_NAME
-  #      var-value: some value
-  #    steps:
-  #      - run:
-  #          name: Set environment variable
-  #          command: |
-  #            for file in .env $BASH_ENV
-  #            do
-  #              echo "export << parameters.var-name >>=\"<< parameters.var-value >>\"" >> $file
-  #            done
-
   build-and-publish-docker-image:
     environment:
       DOCKER_IMAGE: truongvn/trello-nestjs
@@ -64,10 +38,7 @@ jobs:
 workflows:
   docker-init:
     jobs:
-      - persist-env
       - build-and-publish-docker-image:
-          requires:
-            - persist-env
       - deploy-digital-ocean-vps:
           requires:
             - build-and-publish-docker-image
