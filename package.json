@@ -57,10 +57,10 @@
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",
     "swagger-ui-express": "^4.1.4",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.1",
+    "nestjsx-automapper": "^3.1.4"
   },
   "devDependencies": {
-    "nestjsx-automapper": "^3.1.4",
     "@nestjs/testing": "^6.7.1",
     "@types/bcrypt": "^3.0.0",
     "@types/cookie-parser": "^1.4.2",
