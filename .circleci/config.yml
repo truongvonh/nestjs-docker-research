@@ -7,10 +7,11 @@ orbs:
 
 jobs:
   replace-enviroment-variable:
-    executor: docker/docker
+    docker:
+      - image: cimg/base:2020.01
     steps:
+      - checkout
       - run: echo ${BASH_ENV}
-      - run: cd ../
       - run: pwd
       - run: ls -l
       - run:
