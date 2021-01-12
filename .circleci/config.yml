@@ -6,14 +6,12 @@ orbs:
   persist-env: christeredvartsen/persist-env@0.1.0
 
 jobs:
-  replace-enviroment-variable:
-    docker:
-      - image: cimg/base:2020.01
+  build-and-publish-docker-image:
+    environment:
+      DOCKER_IMAGE: truongvn/trello-nestjs
+      DOCKER_TAG: latest
+    executor: docker/docker
     steps:
-      - checkout
-      - run: echo ${BASH_ENV}
-      - run: pwd
-      - run: ls -l
       - run:
           name: copy deploy config script to root directory
           command: cp scripts/secure-env.sh secure-env.sh
@@ -21,12 +19,6 @@ jobs:
           name: load in environment variables
           command: ./secure-env.sh
 
-  build-and-publish-docker-image:
-    environment:
-      DOCKER_IMAGE: truongvn/trello-nestjs
-      DOCKER_TAG: latest
-    executor: docker/docker
-    steps:
       - setup_remote_docker
       - checkout
       - docker/check
@@ -52,10 +44,7 @@ jobs:
 workflows:
   docker-init:
     jobs:
-      - replace-enviroment-variable
-      - build-and-publish-docker-image:
-          requires:
-            - replace-enviroment-variable
+      - build-and-publish-docker-image
       - deploy-digital-ocean-vps:
           requires:
             - build-and-publish-docker-image
