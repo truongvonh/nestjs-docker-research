@@ -9,8 +9,8 @@ services:
       - '4000:4000'
     networks:
       - app-network
-    env_file:
-      - .env
+    #    env_file:
+    #      - .env
     depends_on:
       - redis
       - database
@@ -50,9 +50,4 @@ networks:
     name: trello-nest-network-attach
     attachable: true
 #    driver: overlay
-
-
-
-
-
 
