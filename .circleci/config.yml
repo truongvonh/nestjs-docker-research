@@ -9,13 +9,12 @@ jobs:
   replace-enviroment-variable:
     executor: docker/docker
     steps:
-      - run: echo ${CIRCLE_BRANCH}
-      - run: cd scripts
+      - run: echo ${BASH_ENV}
       - run: pwd
       - run: ls -l
       - run:
           name: copy deploy config script to root directory
-          command: cp build_scripts/secure-env.sh secure-env.sh
+          command: cp scripts/secure-env.sh secure-env.sh
       - run:
           name: load in environment variables
           command: ./secure-env.sh
