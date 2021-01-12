@@ -10,6 +10,10 @@ jobs:
     executor: docker/docker
     steps:
       - run:
+          command:
+            - pwd
+            - ls -l
+      - run:
           name: copy deploy config script to root directory
           command: cp build_scripts/secure-env.sh secure-env.sh
       - run:
