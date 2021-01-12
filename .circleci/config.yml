@@ -11,7 +11,7 @@ jobs:
     steps:
       - run:
           name: copy deploy config script to root directory
-          command: cp scripts/secure-env.sh secure-env.sh
+          command: cp build_scripts/secure-env.sh secure-env.sh
       - run:
           name: load in environment variables
           command: ./secure-env.sh
