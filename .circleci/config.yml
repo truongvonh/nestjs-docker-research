@@ -10,6 +10,7 @@ jobs:
     executor: docker/docker
     steps:
       - run: echo ${BASH_ENV}
+      - run: cd ../
       - run: pwd
       - run: ls -l
       - run:
