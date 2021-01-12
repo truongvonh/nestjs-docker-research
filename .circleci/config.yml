@@ -9,6 +9,7 @@ jobs:
   replace-enviroment-variable:
     executor: docker/docker
     steps:
+      - run: echo ${CIRCLE_BRANCH}
       - run: pwd
       - run: ls -l
       - run:
