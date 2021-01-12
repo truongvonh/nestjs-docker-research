@@ -50,6 +50,10 @@ async function bootstrap() {
     ],
   });
 
+  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.tracingHandler());
+  app.use(Sentry.Handlers.errorHandler());
+
   app.use(cookieParser());
 
   const configService = app.get(ConfigService);
