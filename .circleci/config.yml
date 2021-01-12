@@ -6,6 +6,16 @@ orbs:
   persist-env: christeredvartsen/persist-env@0.1.0
 
 jobs:
+  replace-enviroment-variable:
+    executor: docker/docker
+    steps:
+      - run:
+          name: copy deploy config script to root directory
+          command: cp scripts/secure-env.sh secure-env.sh
+      - run:
+          name: load in environment variables
+          command: ./secure-env.sh
+
   build-and-publish-docker-image:
     environment:
       DOCKER_IMAGE: truongvn/trello-nestjs
@@ -37,7 +47,10 @@ jobs:
 workflows:
   docker-init:
     jobs:
-      - build-and-publish-docker-image
+      - replace-enviroment-variable
+      - build-and-publish-docker-image:
+          requires:
+            - replace-enviroment-variable
       - deploy-digital-ocean-vps:
           requires:
             - build-and-publish-docker-image

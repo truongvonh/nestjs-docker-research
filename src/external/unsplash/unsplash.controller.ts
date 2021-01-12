@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  HttpService,
-  HttpStatus,
-  Query,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, HttpService, HttpStatus, Query, Res } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UnsplashQueryDTO, UnsplashResponseDTO } from './dto/unsplash.dto';
 import { Response } from 'express';
