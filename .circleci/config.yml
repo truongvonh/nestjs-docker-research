@@ -12,15 +12,14 @@ jobs:
       DOCKER_TAG: latest
     executor: docker/docker
     steps:
+      - checkout
       - run:
           name: copy deploy config script to root directory
           command: cp scripts/secure-env.sh secure-env.sh
       - run:
           name: load in environment variables
           command: ./secure-env.sh
-
       - setup_remote_docker
-      - checkout
       - docker/check
       - dotenv/source:
           path: .env
