@@ -2,6 +2,8 @@
 
 cp .env.example .env
 
+echo $CI_DB_USER
+
 sed  's/\($CI_DB_USER\)/'"$CI_DB_USER"'/' .env
 sed  's/\($CI_DB_USER\)/'"$CI_DB_PASSWORD"'/' .env
 sed  's/\($CI_DB_USER\)/'"$CI_DB_NAME"'/' .env
