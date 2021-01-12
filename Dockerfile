@@ -14,9 +14,7 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
-COPY package.json .
-COPY package-lock.json .
-COPY yarn.lock /
+COPY . .
 
 RUN ls -l
 
