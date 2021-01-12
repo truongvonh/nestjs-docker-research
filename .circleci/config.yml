@@ -10,6 +10,7 @@ jobs:
     executor: docker/docker
     steps:
       - run: echo ${CIRCLE_BRANCH}
+      - run: cd scripts
       - run: pwd
       - run: ls -l
       - run:
