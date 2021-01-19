@@ -2,10 +2,13 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
   HttpStatus,
   Inject,
+  Logger,
   Param,
   Post,
+  Put,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -15,6 +18,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { BoardModel } from './board.schema';
 import { Request, Response } from 'express';
 import {
+  AddUserBoardDTO,
   CreateBoardDTO,
   QueryUserBoardDTO,
   UserBoardResponse,
@@ -22,11 +26,11 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { Model, Types } from 'mongoose';
 import { WorkspaceModel } from '../workspace/workspace.schema';
-import { CreateWorkspaceDTO } from '../workspace/dto/workspace.dto';
 import { IUserRequest } from '../auth/interfaces/auth.interface';
 import { BoardService } from './board.service';
-import { IBoardCache } from './interfaces/board-cache.interface';
 import { UserModel } from '../users/user.schema';
+import { ERRORS_MESSAGE } from '../constants/messages/errors';
+import { SUCCESS_MESSAGE } from '../constants/messages/success';
 
 @ApiTags('Board')
 @Controller('board')
@@ -47,20 +51,18 @@ export class BoardController {
     @Body() createBoardDTO: CreateBoardDTO,
     @Res() res: Response,
   ) {
-    const newBoard = await new this.boardModel(createBoardDTO).save();
+    Logger.debug(createBoardDTO);
+    const owner = this.requestCtx.user._id;
+    const newBoard = await new this.boardModel({
+      ...createBoardDTO,
+      users: [owner],
+    }).save();
 
-    const workspace = {
-      user: this.requestCtx.user._id,
-      board: newBoard._id,
-    } as CreateWorkspaceDTO;
-
-    const newWorkspace = await new this.workspaceModel(workspace).save();
-
-    await this.boardService.updateBoardCaching({
-      user: this.requestCtx.user,
-      board: newBoard,
-      workspace: newWorkspace,
-    } as IBoardCache);
+    Logger.debug(newBoard._id);
+    await this.userModel.findOneAndUpdate(
+      { _id: owner },
+      { $push: { boards: newBoard._id } },
+    );
 
     return res.status(HttpStatus.OK).json(newBoard);
   }
@@ -74,19 +76,84 @@ export class BoardController {
     @Res() res: Response,
   ): Promise<Response> {
     const { userId } = param;
+    Logger.debug(param);
 
-    const [workspaces, user] = await Promise.all([
-      this.boardService.getWorkSpaceByUser(userId),
-      this.userModel.findOne({ _id: Types.ObjectId(userId) }).lean(),
-    ]);
+    const excludeBoard = { select: '-boards' };
 
-    const response = {
-      ...user,
-      boards: workspaces.map(({ board }) => board),
-    };
-
-    await this.boardService.cachingUserBoards(user._id, response);
+    const response = await this.userModel
+      .findOne({ _id: userId })
+      .populate({
+        path: 'boards',
+        populate: [
+          {
+            path: 'owner',
+            ...excludeBoard,
+          },
+          {
+            path: 'users',
+            ...excludeBoard,
+          },
+        ],
+      })
+      .lean();
 
     return res.status(HttpStatus.OK).json(response);
+  }
+
+  @Put('/:boardId/user/:userId')
+  @UseGuards(JwtAuthenticationGuard)
+  @ApiOperation({ summary: 'Add new user to the board' })
+  public async addUserBoard(
+    @Body() addUserBoardDTO: AddUserBoardDTO,
+    @Res() res: Response,
+  ): Promise<Response> {
+    const { userId, boardId } = addUserBoardDTO;
+
+    const { _id: userAddId } = this.requestCtx.user;
+
+    const boardToAdd = await this.boardModel.findOne({ _id: boardId });
+
+    if (!boardToAdd) {
+      throw new HttpException(
+        ERRORS_MESSAGE.ENTITY_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (!boardToAdd.owner.equals(userAddId)) {
+      throw new HttpException(
+        ERRORS_MESSAGE.NOT_OBJECT_OWNER,
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const userExist = await this.userModel.findOne({ _id: userId });
+
+    if (!userExist) {
+      throw new HttpException(
+        ERRORS_MESSAGE.USER_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const isExistUserInBoard = boardToAdd.users.includes(
+      Types.ObjectId(userId),
+    );
+
+    if (isExistUserInBoard) {
+      throw new HttpException(
+        ERRORS_MESSAGE.USER_EXISTED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await Promise.all([
+      new this.boardModel(boardToAdd).update({ $push: { users: userId } }),
+      new this.userModel(userExist).update({
+        $push: { boards: boardToAdd._id },
+      }),
+    ]);
+
+    return res.status(HttpStatus.OK).json(SUCCESS_MESSAGE.OK);
   }
 }

@@ -1,4 +1,5 @@
 import {
+  forwardRef,
   MiddlewareConsumer,
   Module,
   NestModule,
@@ -13,9 +14,11 @@ import { CachingService } from '../database/redis/redis.service';
 import { BoardService } from './board.service';
 import { UserModel, UserSchema } from '../users/user.schema';
 import { CachingUserBoardMiddleware } from './middlewares/caching.middleware';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
+    forwardRef(() => UsersModule),
     RedisModule,
     MongooseModule.forFeature([
       { name: BoardModel.name, schema: BoardSchema },

@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
-import { WorkspaceModel } from '../workspace/workspace.schema';
+import { Document, SchemaTypes, Types } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { AuthModel } from '../auth/auth.schema';
+import { BoardModel } from '../board/board.schema';
 
 @Schema({ timestamps: true })
 export class UserModel extends Document {
@@ -15,8 +14,8 @@ export class UserModel extends Document {
   name: string;
 
   @ApiProperty()
-  @Prop({ type: [Types.ObjectId], ref: WorkspaceModel.name })
-  workspaces: WorkspaceModel[];
+  @Prop([{ type: SchemaTypes.ObjectId, ref: BoardModel.name }])
+  boards: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserModel);
