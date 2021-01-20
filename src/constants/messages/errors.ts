@@ -12,4 +12,6 @@ export enum ERRORS_MESSAGE {
   REDIS_ERROR_SET_KEY = 'Have a error when set caching',
 
   NOT_OBJECT_OWNER = 'Can not process because you not the owner!',
+
+  ERROR_AUTO_INCREMENT = 'Error when auto increment fields',
 }

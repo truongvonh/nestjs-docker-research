@@ -84,6 +84,7 @@ export class BoardController {
       .findOne({ _id: userId })
       .populate({
         path: 'boards',
+        select: '-lists',
         populate: [
           {
             path: 'owner',

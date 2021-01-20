@@ -17,6 +17,7 @@ import { REDIS_OPTIONS } from './database/redis/redis.options';
 import { FileModule } from './file/file.module';
 import { RavenInterceptor } from 'nest-raven';
 import { UnsplashModule } from './external/unsplash/unsplash.module';
+import { ListsModule } from './lists/lists.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UnsplashModule } from './external/unsplash/unsplash.module';
     BoardModule,
     FileModule,
     UnsplashModule,
+    ListsModule,
     // AutomapperModule.withMapper(),
   ],
   controllers: [AppController],

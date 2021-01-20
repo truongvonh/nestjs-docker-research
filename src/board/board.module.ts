@@ -15,6 +15,7 @@ import { BoardService } from './board.service';
 import { UserModel, UserSchema } from '../users/user.schema';
 import { CachingUserBoardMiddleware } from './middlewares/caching.middleware';
 import { UsersModule } from '../users/users.module';
+import { ListsModel, ListsSchema } from '../lists/lists.schema';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UsersModule } from '../users/users.module';
       { name: BoardModel.name, schema: BoardSchema },
       { name: WorkspaceModel.name, schema: WorkspaceSchema },
       { name: UserModel.name, schema: UserSchema },
+      { name: ListsModel.name, schema: ListsSchema },
     ]),
   ],
   controllers: [BoardController],
