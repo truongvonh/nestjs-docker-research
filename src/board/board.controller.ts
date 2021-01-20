@@ -148,7 +148,9 @@ export class BoardController {
     }
 
     await Promise.all([
-      new this.boardModel(boardToAdd).update({ $push: { users: userId } }),
+      new this.boardModel(boardToAdd).update({
+        $push: { users: Types.ObjectId(userId) },
+      }),
       new this.userModel(userExist).update({
         $push: { boards: boardToAdd._id },
       }),
