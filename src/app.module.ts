@@ -18,6 +18,7 @@ import { FileModule } from './file/file.module';
 import { RavenInterceptor } from 'nest-raven';
 import { UnsplashModule } from './external/unsplash/unsplash.module';
 import { ListsModule } from './lists/lists.module';
+import { DeviceModule } from './device/device.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ListsModule } from './lists/lists.module';
     FileModule,
     UnsplashModule,
     ListsModule,
+    DeviceModule,
     // AutomapperModule.withMapper(),
   ],
   controllers: [AppController],

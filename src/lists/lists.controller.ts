@@ -30,6 +30,7 @@ export class ListsController {
   ) {}
 
   @ApiOperation({ summary: 'Get all lists' })
+  @UseGuards(JwtAuthenticationGuard)
   @Get(':boardId')
   public async getLists(
     @Param() queryListParam: GetListParam,

@@ -48,6 +48,8 @@
     "mongoose": "^5.10.11",
     "nest-raven": "7.0.0",
     "nestjs-redis": "^1.2.8",
+    "nestjsx-automapper": "^3.1.4",
+    "onesignal-node": "^3.2.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
@@ -57,8 +59,7 @@
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",
     "swagger-ui-express": "^4.1.4",
-    "uuid": "^8.3.1",
-    "nestjsx-automapper": "^3.1.4"
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@nestjs/testing": "^6.7.1",

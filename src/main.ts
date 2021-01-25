@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'aws-sdk';
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
+import { OneSignalService } from './shared/services/one-signal.service';
 
 const PORT = process.env.APP_PORT || 8000;
 
@@ -61,6 +62,8 @@ async function bootstrap() {
     secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
     region: configService.get('AWS_REGION'),
   });
+
+  new OneSignalService().init();
 
   await app.listen(PORT);
 
