@@ -10,6 +10,9 @@ import { ListsModel, ListsSchema } from '../lists/lists.schema';
 import { DeviceService } from '../device/device.service';
 import { OneSignalService } from '../shared/services/one-signal.service';
 import { DeviceModel, DeviceSchema } from '../device/device.scheme';
+import { BullModule } from '@nestjs/bull';
+import { BOARD_QUEUE } from './queue.constants';
+import { BoardQueueProcessor } from './board.processor';
 
 @Module({
   imports: [
@@ -21,8 +24,11 @@ import { DeviceModel, DeviceSchema } from '../device/device.scheme';
       { name: ListsModel.name, schema: ListsSchema },
       { name: DeviceModel.name, schema: DeviceSchema },
     ]),
+    BullModule.registerQueue({
+      name: BOARD_QUEUE,
+    }),
   ],
   controllers: [BoardController],
-  providers: [BoardService, DeviceService, OneSignalService],
+  providers: [BoardService, DeviceService, OneSignalService, BoardQueueProcessor],
 })
 export class BoardModule {}

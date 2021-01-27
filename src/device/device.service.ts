@@ -13,7 +13,7 @@ export class DeviceService {
     @InjectModel(DeviceModel.name) private deviceModel: Model<DeviceModel>,
   ) {}
 
-  public async pushNotificationToListDevice(entityId: string): Promise<void> {
+  public async pushNotificationToListDevice(entityId: string, content: string): Promise<void> {
     try {
       Logger.debug(entityId);
 
@@ -29,10 +29,10 @@ export class DeviceService {
 
       const notificationPayload = {
         headings: {
-          en: 'Test upload Continue',
+          en: 'You got new notification!',
         },
         contents: {
-          en: 'Push notification success!',
+          en: content,
         },
         include_player_ids: listDeviceIds,
       } as CreateNotificationBody;

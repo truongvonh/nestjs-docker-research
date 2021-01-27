@@ -19,10 +19,17 @@ import { RavenInterceptor } from 'nest-raven';
 import { UnsplashModule } from './external/unsplash/unsplash.module';
 import { ListsModule } from './lists/lists.module';
 import { DeviceModule } from './device/device.module';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
     RedisModule.register(REDIS_OPTIONS),
+    BullModule.forRoot({
+      redis: {
+        host: 'redis',
+        port: +process.env.REDIS_PORT,
+      },
+    }),
     MongooseModule.forRoot(uri),
     CatModule,
     AuthModule,
@@ -33,7 +40,6 @@ import { DeviceModule } from './device/device.module';
     UnsplashModule,
     ListsModule,
     DeviceModule,
-    // AutomapperModule.withMapper(),
   ],
   controllers: [AppController],
   providers: [
