@@ -37,9 +37,7 @@ export class DeviceService {
         include_player_ids: listDeviceIds,
       } as CreateNotificationBody;
 
-      const response = await this.oneSignalService.createNotification(
-        notificationPayload,
-      );
+      const response = await this.oneSignalService.createNotification(notificationPayload);
       Logger.debug(response);
     } catch (e) {
       Logger.debug(`e: ${e}`);
