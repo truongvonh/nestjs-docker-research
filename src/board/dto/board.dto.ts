@@ -1,10 +1,4 @@
-import {
-  IsNotEmpty,
-  IsObject,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsNotEmpty, IsObject, IsString, MaxLength, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserModel } from '../../users/user.schema';
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
@@ -48,10 +42,6 @@ export class CreateBoardDTO {
     },
   })
   readonly urls: UrlsDTO;
-
-  @IsString()
-  @ApiProperty({ example: 'user id' })
-  readonly owner: string;
 }
 
 export class QueryUserBoardDTO {

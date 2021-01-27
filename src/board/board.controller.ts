@@ -32,6 +32,11 @@ import { SUCCESS_MESSAGE } from '../constants/messages/success';
 import { DeviceService } from '../device/device.service';
 import { UsersService } from '../users/users.service';
 import { BoardService } from './board.service';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
+import { BOARD_EVENT, BOARD_QUEUE } from './queue.constants';
+import { IPushDeviceQueuePayload } from './interfaces/queue.interface';
+import { notificationMessage } from './board.helper';
 
 @ApiTags('Board')
 @Controller('board')
@@ -40,6 +45,7 @@ export class BoardController {
     @InjectModel(BoardModel.name) private boardModel: Model<BoardModel>,
     @InjectModel(UserModel.name) private userModel: Model<UserModel>,
     @Inject(REQUEST) private requestCtx: IUserRequest & Request,
+    @InjectQueue(BOARD_QUEUE) private readonly boardQueue: Queue,
     private deviceService: DeviceService,
     private userService: UsersService,
     private boardService: BoardService,
@@ -48,22 +54,17 @@ export class BoardController {
   @ApiOperation({ summary: 'Create Board' })
   @UseGuards(JwtAuthenticationGuard)
   @Post()
-  public async createBoard(
-    @Body() createBoardDTO: CreateBoardDTO,
-    @Res() res: Response,
-  ) {
+  public async createBoard(@Body() createBoardDTO: CreateBoardDTO, @Res() res: Response) {
     Logger.debug(createBoardDTO);
     const owner = this.requestCtx.user._id;
     const newBoard = await new this.boardModel({
       ...createBoardDTO,
+      owner,
       users: [owner],
     }).save();
 
     Logger.debug(newBoard._id);
-    await this.userModel.findOneAndUpdate(
-      { _id: owner },
-      { $push: { boards: newBoard._id } },
-    );
+    await this.userModel.findOneAndUpdate({ _id: owner }, { $push: { boards: newBoard._id } });
 
     return res.status(HttpStatus.OK).json(newBoard);
   }
@@ -111,28 +112,20 @@ export class BoardController {
   ): Promise<Response> {
     const { userId, boardId } = addUserBoardDTO;
 
-    const { _id: userAddId } = this.requestCtx.user;
+    const { _id: userAddId, name: userAddName } = this.requestCtx.user;
 
     const boardToAdd = await this.boardService.getBoardById(boardId);
 
     if (!boardToAdd.owner.equals(userAddId)) {
-      throw new HttpException(
-        ERRORS_MESSAGE.NOT_OBJECT_OWNER,
-        HttpStatus.FORBIDDEN,
-      );
+      throw new HttpException(ERRORS_MESSAGE.NOT_OBJECT_OWNER, HttpStatus.FORBIDDEN);
     }
 
     const userExist = await this.userService.getUserById(userId);
 
-    const isExistUserInBoard = boardToAdd.users.includes(
-      Types.ObjectId(userId),
-    );
+    const isExistUserInBoard = boardToAdd.users.includes(Types.ObjectId(userId));
 
     if (isExistUserInBoard) {
-      throw new HttpException(
-        ERRORS_MESSAGE.USER_EXISTED,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException(ERRORS_MESSAGE.USER_EXISTED, HttpStatus.BAD_REQUEST);
     }
 
     await Promise.all([
@@ -144,7 +137,10 @@ export class BoardController {
       }),
     ]);
 
-    await this.deviceService.pushNotificationToListDevice(userId);
+    await this.boardQueue.add(BOARD_EVENT.PUSH_DEVICE_NOTIFICATION, {
+      userId,
+      content: notificationMessage(userAddName, boardToAdd.name),
+    } as IPushDeviceQueuePayload);
 
     return res.status(HttpStatus.OK).json(SUCCESS_MESSAGE.OK);
   }
