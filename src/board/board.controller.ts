@@ -25,12 +25,13 @@ import {
 } from './dto/board.dto';
 import { REQUEST } from '@nestjs/core';
 import { Model, Types } from 'mongoose';
-import { WorkspaceModel } from '../workspace/workspace.schema';
 import { IUserRequest } from '../auth/interfaces/auth.interface';
-import { BoardService } from './board.service';
 import { UserModel } from '../users/user.schema';
 import { ERRORS_MESSAGE } from '../constants/messages/errors';
 import { SUCCESS_MESSAGE } from '../constants/messages/success';
+import { DeviceService } from '../device/device.service';
+import { UsersService } from '../users/users.service';
+import { BoardService } from './board.service';
 
 @ApiTags('Board')
 @Controller('board')
@@ -38,9 +39,9 @@ export class BoardController {
   constructor(
     @InjectModel(BoardModel.name) private boardModel: Model<BoardModel>,
     @InjectModel(UserModel.name) private userModel: Model<UserModel>,
-    @InjectModel(WorkspaceModel.name)
-    private workspaceModel: Model<WorkspaceModel>,
     @Inject(REQUEST) private requestCtx: IUserRequest & Request,
+    private deviceService: DeviceService,
+    private userService: UsersService,
     private boardService: BoardService,
   ) {}
 
@@ -112,14 +113,7 @@ export class BoardController {
 
     const { _id: userAddId } = this.requestCtx.user;
 
-    const boardToAdd = await this.boardModel.findOne({ _id: boardId });
-
-    if (!boardToAdd) {
-      throw new HttpException(
-        ERRORS_MESSAGE.ENTITY_NOT_FOUND,
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    const boardToAdd = await this.boardService.getBoardById(boardId);
 
     if (!boardToAdd.owner.equals(userAddId)) {
       throw new HttpException(
@@ -128,14 +122,7 @@ export class BoardController {
       );
     }
 
-    const userExist = await this.userModel.findOne({ _id: userId });
-
-    if (!userExist) {
-      throw new HttpException(
-        ERRORS_MESSAGE.USER_NOT_FOUND,
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    const userExist = await this.userService.getUserById(userId);
 
     const isExistUserInBoard = boardToAdd.users.includes(
       Types.ObjectId(userId),
@@ -156,6 +143,8 @@ export class BoardController {
         $push: { boards: boardToAdd._id },
       }),
     ]);
+
+    await this.deviceService.pushNotificationToListDevice(userId);
 
     return res.status(HttpStatus.OK).json(SUCCESS_MESSAGE.OK);
   }

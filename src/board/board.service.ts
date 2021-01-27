@@ -1,29 +1,27 @@
-import { Injectable } from '@nestjs/common';
-import { CachingService } from '../database/redis/redis.service';
-import { CACHE_KEY_USER_BOARD } from './constants/cache.key';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
-import { WorkspaceModel } from '../workspace/workspace.schema';
+import { BoardModel } from './board.schema';
+import { ERRORS_MESSAGE } from '../constants/messages/errors';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class BoardService {
   constructor(
-    private readonly cachingService: CachingService,
-    @InjectModel(WorkspaceModel.name)
-    private workspaceModel: Model<WorkspaceModel>,
+    @InjectModel(BoardModel.name) private boardModel: Model<BoardModel>,
   ) {}
 
-  public async getWorkSpaceByUser(userId: string): Promise<WorkspaceModel[]> {
-    return this.workspaceModel.find({ user: Types.ObjectId(userId) }).populate({
-      path: 'board',
-      populate: [
-        {
-          path: 'owner',
-        },
-        {
-          path: 'users',
-        },
-      ],
-    });
+  public async getBoardById(
+    boardId: string | Types.ObjectId,
+  ): Promise<BoardModel> {
+    const boardExist = await this.boardModel.findOne({ _id: boardId });
+
+    if (!boardExist) {
+      throw new HttpException(
+        ERRORS_MESSAGE.ENTITY_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return boardExist;
   }
 }

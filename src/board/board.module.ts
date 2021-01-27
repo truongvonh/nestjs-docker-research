@@ -1,21 +1,15 @@
-import {
-  forwardRef,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BoardModel, BoardSchema } from './board.schema';
 import { BoardController } from './board.controller';
-import { WorkspaceModel, WorkspaceSchema } from '../workspace/workspace.schema';
 import { RedisModule } from 'nestjs-redis';
-import { CachingService } from '../database/redis/redis.service';
 import { BoardService } from './board.service';
 import { UserModel, UserSchema } from '../users/user.schema';
-import { CachingUserBoardMiddleware } from './middlewares/caching.middleware';
 import { UsersModule } from '../users/users.module';
 import { ListsModel, ListsSchema } from '../lists/lists.schema';
+import { DeviceService } from '../device/device.service';
+import { OneSignalService } from '../shared/services/one-signal.service';
+import { DeviceModel, DeviceSchema } from '../device/device.scheme';
 
 @Module({
   imports: [
@@ -23,19 +17,12 @@ import { ListsModel, ListsSchema } from '../lists/lists.schema';
     RedisModule,
     MongooseModule.forFeature([
       { name: BoardModel.name, schema: BoardSchema },
-      { name: WorkspaceModel.name, schema: WorkspaceSchema },
       { name: UserModel.name, schema: UserSchema },
       { name: ListsModel.name, schema: ListsSchema },
+      { name: DeviceModel.name, schema: DeviceSchema },
     ]),
   ],
   controllers: [BoardController],
-  providers: [CachingService, BoardService],
+  providers: [BoardService, DeviceService, OneSignalService],
 })
-export class BoardModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CachingUserBoardMiddleware).forRoutes({
-      path: 'board/:userId',
-      method: RequestMethod.GET,
-    });
-  }
-}
+export class BoardModule {}

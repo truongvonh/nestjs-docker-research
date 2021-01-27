@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserModel } from './user.schema';
@@ -41,5 +41,18 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  async getUserById(userId): Promise<UserModel> {
+    const userExist = await this.userModel.findOne({ _id: userId });
+
+    if (!userExist) {
+      throw new HttpException(
+        ERRORS_MESSAGE.USER_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return userExist;
   }
 }
