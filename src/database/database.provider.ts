@@ -2,7 +2,7 @@ import { Logger } from '@nestjs/common';
 import { MongoClient } from 'mongodb';
 import { COMMON_NAME_SPACE } from '../constants/common';
 
-const isProduction = process.env.NODE_ENV === 'production';
+export const isProduction = process.env.NODE_ENV === 'production';
 
 const MONGO_NAME_BY_ENV = isProduction ? 'trello-nest-stack_database' : 'mongo';
 
