@@ -17,12 +17,7 @@ import JwtAuthenticationGuard from '../auth/guard/jwt.guard';
 import { InjectModel } from '@nestjs/mongoose';
 import { BoardModel } from './board.schema';
 import { Request, Response } from 'express';
-import {
-  AddUserBoardDTO,
-  CreateBoardDTO,
-  QueryUserBoardDTO,
-  UserBoardResponse,
-} from './dto/board.dto';
+import { AddUserBoardDTO, CreateBoardDTO, QueryUserBoardDTO, UserBoardResponse } from './dto/board.dto';
 import { REQUEST } from '@nestjs/core';
 import { Model, Types } from 'mongoose';
 import { IUserRequest } from '../auth/interfaces/auth.interface';
@@ -35,8 +30,8 @@ import { BoardService } from './board.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { BOARD_EVENT, BOARD_QUEUE } from './queue.constants';
-import { IPushDeviceQueuePayload } from './interfaces/queue.interface';
 import { notificationMessage } from './board.helper';
+import { IPushDeviceQueuePayload } from './interfaces/queue.interface';
 
 @ApiTags('Board')
 @Controller('board')
