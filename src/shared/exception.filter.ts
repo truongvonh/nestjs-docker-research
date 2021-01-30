@@ -15,17 +15,14 @@ export class AllExceptionFilter<T> implements ExceptionFilter {
     const request = ctx.getRequest();
 
     const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
-    Logger.debug(exception);
+      exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const errorResponse = {
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
       method: request.method,
-      message: exception.message || exception.message.message || null,
+      message: exception.message?.message || exception.message || null,
     };
 
     response.status(status).json(errorResponse);

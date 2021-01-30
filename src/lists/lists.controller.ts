@@ -29,6 +29,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { LIST_EVENT, LIST_QUEUE } from './queue.constants';
 import { IUpdateListOrderByQueueDTO, ListUpdateDirectionEnum } from './list.interface';
+import { LIST_ERROR_MESSAGE } from './contants/list.error';
 
 @Controller('lists')
 @ApiTags('Lists Endpoint')
@@ -102,12 +103,17 @@ export class ListsController {
     const { order: currentOrder } = listToUpdate;
 
     if (newOrder) {
-      const listByNewOrder = await this.listsModel.findOne({ order: newOrder });
+      const maxOrder = await this.listsModel.find({ boardId: listToUpdate.boardId }).count();
+
+      if (newOrder > maxOrder) {
+        throw new HttpException(LIST_ERROR_MESSAGE.ORDER_INVALID, HttpStatus.UNPROCESSABLE_ENTITY);
+      }
 
       if (
         newOrder === currentOrder + this.NEAR_POSITION ||
         currentOrder === newOrder + this.NEAR_POSITION
       ) {
+        const listByNewOrder = await this.listsModel.findOne({ order: newOrder });
         await Promise.all([
           new this.listsModel(listToUpdate).updateOne({ $set: { order: newOrder } }),
           new this.listsModel(listByNewOrder).updateOne({ $set: { order: currentOrder } }),
