@@ -20,6 +20,7 @@ import { UnsplashModule } from './external/unsplash/unsplash.module';
 import { ListsModule } from './lists/lists.module';
 import { DeviceModule } from './device/device.module';
 import { BullModule } from '@nestjs/bull';
+import { CardModule } from './card/card.module';
 
 const redisHost = isProduction ? 'trello-nest-stack_redis' : 'redis';
 
@@ -42,6 +43,7 @@ const redisHost = isProduction ? 'trello-nest-stack_redis' : 'redis';
     UnsplashModule,
     ListsModule,
     DeviceModule,
+    CardModule,
   ],
   controllers: [AppController],
   providers: [

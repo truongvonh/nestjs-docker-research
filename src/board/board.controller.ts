@@ -109,7 +109,7 @@ export class BoardController {
 
     const { _id: userAddId, name: userAddName } = this.requestCtx.user;
 
-    const boardToAdd = await this.boardService.getBoardById(boardId);
+    const boardToAdd = await this.boardService.checkExistBoardById(boardId);
 
     if (!boardToAdd.owner.equals(userAddId)) {
       throw new HttpException(ERRORS_MESSAGE.NOT_OBJECT_OWNER, HttpStatus.FORBIDDEN);

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BoardModel } from '../board/board.schema';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { ListsModel } from './lists.schema';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import JwtAuthenticationGuard from '../auth/guard/jwt.guard';
@@ -23,13 +23,13 @@ import {
   UpdateListParamDTO,
 } from './dto/lists.dto';
 import { Response } from 'express';
-import { ERRORS_MESSAGE } from '../constants/messages/errors';
 import { ListsService } from './lists.service';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { LIST_ERROR_MESSAGE } from './contants/list.error';
 import { LIST_EVENT, LIST_QUEUE } from './queue.constants';
 import { IUpdateListOrderByQueueDTO, ListUpdateDirectionEnum } from './list.interface';
-import { LIST_ERROR_MESSAGE } from './contants/list.error';
+import { BoardService } from '../board/board.service';
 
 @Controller('lists')
 @ApiTags('Lists Endpoint')
@@ -39,6 +39,7 @@ export class ListsController {
     @InjectModel(ListsModel.name) private listsModel: Model<ListsModel>,
     @InjectQueue(LIST_QUEUE) private readonly listQueue: Queue,
     private listService: ListsService,
+    private boardService: BoardService,
   ) {}
 
   private NEAR_POSITION: number = 1;
@@ -66,13 +67,7 @@ export class ListsController {
   ): Promise<Response> {
     const { boardId } = createListDTO;
 
-    const boardExist = await this.boardModel.findOne({
-      _id: Types.ObjectId(boardId),
-    });
-
-    if (!boardExist) {
-      throw new HttpException(ERRORS_MESSAGE.ENTITY_NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
+    await this.boardService.checkExistBoardById(boardId);
 
     const nextOrder = await this.listService.getNextOrderByBoard(boardId);
 
@@ -80,10 +75,6 @@ export class ListsController {
       ...createListDTO,
       order: nextOrder,
     }).save();
-
-    await new this.boardModel(boardExist).update({
-      $push: { lists: newList._id },
-    });
 
     return res.status(HttpStatus.OK).json(newList);
   }
@@ -99,7 +90,7 @@ export class ListsController {
     const { listId } = updateListParamDTO;
     const { order: newOrder, name: newName } = updateListBodyDTO;
 
-    const listToUpdate = await this.listService.getListById(listId);
+    const listToUpdate = await this.listService.checkListExistById(listId);
     const { order: currentOrder } = listToUpdate;
 
     if (newOrder) {
@@ -131,7 +122,7 @@ export class ListsController {
           listToUpdate,
           newOrder,
           direction: ListUpdateDirectionEnum.Right,
-        });
+        } as IUpdateListOrderByQueueDTO);
       }
 
       return res.status(HttpStatus.OK).json({ ...listToUpdate.toObject(), order: newOrder });

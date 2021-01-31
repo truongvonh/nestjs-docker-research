@@ -21,7 +21,7 @@ export class ListsService {
     return this.listsModel.find({ boardId: Types.ObjectId(boardId) }).count();
   }
 
-  public async getListById(listId: string): Promise<ListsModel> {
+  public async checkListExistById(listId: string): Promise<ListsModel> {
     const existList = await this.listsModel.findOne({ _id: Types.ObjectId(listId) });
 
     if (!existList) {

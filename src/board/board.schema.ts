@@ -3,7 +3,6 @@ import { Document, SchemaTypes, Types } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Urls } from '../external/unsplash/model/unsplash.model';
 import { UserModel } from '../users/user.schema';
-import { ListsModel } from '../lists/lists.schema';
 
 @Schema({ _id: false })
 export class UrlModel extends Document {
@@ -45,10 +44,6 @@ export class BoardModel extends Document {
   @ApiProperty()
   @Prop([{ type: SchemaTypes.ObjectId, ref: 'UserModel' }])
   users: Types.ObjectId[];
-
-  @ApiProperty()
-  @Prop([{ type: SchemaTypes.ObjectId, ref: ListsModel.name }])
-  lists: Types.ObjectId[];
 }
 
 export const BoardSchema = SchemaFactory.createForClass(BoardModel);

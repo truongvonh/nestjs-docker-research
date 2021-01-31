@@ -7,6 +7,7 @@ import { ListsModel, ListsSchema } from './lists.schema';
 import { BullModule } from '@nestjs/bull';
 import { LIST_QUEUE } from './queue.constants';
 import { ListQueueProcessor } from './list.processor';
+import { BoardService } from '../board/board.service';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { ListQueueProcessor } from './list.processor';
     }),
   ],
   controllers: [ListsController],
-  providers: [ListsService, ListQueueProcessor],
+  providers: [ListsService, ListQueueProcessor, BoardService],
 })
 export class ListsModule {}
