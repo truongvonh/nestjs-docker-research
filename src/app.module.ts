@@ -7,7 +7,7 @@ import { CatModule } from './cat/cat.module';
 import { AllExceptionFilter } from './shared/exception.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { MongooseModule } from '@nestjs/mongoose';
-import { isProduction, uri } from './database/database.provider';
+import { uri } from './database/database.provider';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { WorkspaceModule } from './workspace/workspace.module';
@@ -22,13 +22,12 @@ import { DeviceModule } from './device/device.module';
 import { BullModule } from '@nestjs/bull';
 import { CardModule } from './card/card.module';
 
-const redisHost = isProduction ? 'trello-nest-stack_redis' : 'redis';
-
 @Module({
   imports: [
     RedisModule.register(REDIS_OPTIONS),
     BullModule.forRoot({
       redis: {
+        name: process.env.REDIS_NAME,
         host: process.env.REDIS_HOST,
         port: +process.env.REDIS_PORT,
       },
