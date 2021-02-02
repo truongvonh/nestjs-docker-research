@@ -9,6 +9,7 @@ import { config } from 'aws-sdk';
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import { OneSignalService } from './shared/services/one-signal.service';
+import { RedisIoAdapter } from './adapters/redis.adapter';
 
 const PORT = process.env.APP_PORT || 8000;
 
@@ -55,6 +56,7 @@ async function bootstrap() {
   app.use(Sentry.Handlers.errorHandler());
 
   app.use(cookieParser());
+  app.useWebSocketAdapter(new RedisIoAdapter(app));
 
   const configService = app.get(ConfigService);
   config.update({

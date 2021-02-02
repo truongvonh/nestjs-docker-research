@@ -21,15 +21,16 @@ import { ListsModule } from './lists/lists.module';
 import { DeviceModule } from './device/device.module';
 import { BullModule } from '@nestjs/bull';
 import { CardModule } from './card/card.module';
+// import { AppGateway } from './app.gateway';
 
-const redisHost = isProduction ? 'trello-nest-stack_redis' : 'redis';
+export const redisHost = isProduction ? 'trello-nest-stack_redis' : 'redis';
 
 @Module({
   imports: [
     RedisModule.register(REDIS_OPTIONS),
     BullModule.forRoot({
       redis: {
-        host: redisHost,
+        host: process.env.REDIS_HOST,
         port: +process.env.REDIS_PORT,
       },
     }),
@@ -67,6 +68,7 @@ const redisHost = isProduction ? 'trello-nest-stack_redis' : 'redis';
         ],
       }),
     },
+    // AppGateway,
   ],
 })
 export class AppModule {}
