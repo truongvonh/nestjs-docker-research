@@ -17,6 +17,7 @@ const corsArr = ['http://localhost:3000', 'https://trello-clone.dev'];
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useWebSocketAdapter(new RedisIoAdapter(app));
   app.enableCors({ origin: corsArr, credentials: true });
 
   app.setGlobalPrefix('api');
@@ -56,7 +57,6 @@ async function bootstrap() {
   app.use(Sentry.Handlers.errorHandler());
 
   app.use(cookieParser());
-  app.useWebSocketAdapter(new RedisIoAdapter(app));
 
   const configService = app.get(ConfigService);
   config.update({

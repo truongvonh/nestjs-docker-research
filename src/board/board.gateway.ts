@@ -5,6 +5,7 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
@@ -20,8 +21,14 @@ export class BoardGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
 
   private logger: Logger = new Logger('BoardGateway');
 
+  @SubscribeMessage('msgToServer')
+  public handleMessage(client: Socket, payload: any) {
+    return this.server.to(payload.room).emit('msgToClient', payload);
+  }
+
   @SubscribeMessage(BOARD_SCRIBE_EVENT.JOIN_ROOM)
   public joinRoom(client: Socket, room: string): void {
+    this.logger.log(room);
     client.join(room);
     client.emit(BOARD_EMIT_EVENT.JOINED_ROOM, room);
   }

@@ -1,5 +1,5 @@
 export const BOARD_NAME_SPACE = {
-  name: '/board',
+  namespace: '/board',
 };
 
 export const BOARD_SCRIBE_EVENT = {
