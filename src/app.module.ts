@@ -29,7 +29,7 @@ const redisHost = isProduction ? 'trello-nest-stack_redis' : 'redis';
     RedisModule.register(REDIS_OPTIONS),
     BullModule.forRoot({
       redis: {
-        host: redisHost,
+        host: process.env.REDIS_HOST,
         port: +process.env.REDIS_PORT,
       },
     }),
