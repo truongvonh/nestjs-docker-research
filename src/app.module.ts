@@ -26,7 +26,6 @@ import { CardModule } from './card/card.module';
   imports: [
     RedisModule.register(REDIS_OPTIONS),
     BullModule.forRoot({
-
       redis: {
         name: process.env.REDIS_NAME,
         host: process.env.REDIS_HOST,
