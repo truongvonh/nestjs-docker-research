@@ -15,18 +15,21 @@ import { BoardModule } from './board/board.module';
 import { RedisModule } from 'nestjs-redis';
 import { REDIS_OPTIONS } from './database/redis/redis.options';
 import { FileModule } from './file/file.module';
+// @ts-ignore
 import { RavenInterceptor } from 'nest-raven';
 import { UnsplashModule } from './external/unsplash/unsplash.module';
 import { ListsModule } from './lists/lists.module';
 import { DeviceModule } from './device/device.module';
 import { BullModule } from '@nestjs/bull';
 import { CardModule } from './card/card.module';
-// import { AppGateway } from './app.gateway';
 
 export const redisHost = isProduction ? 'trello-nest-stack_redis' : 'redis';
 
 @Module({
   imports: [
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'client'),
+    // }),
     RedisModule.register(REDIS_OPTIONS),
     BullModule.forRoot({
       redis: {
@@ -68,7 +71,6 @@ export const redisHost = isProduction ? 'trello-nest-stack_redis' : 'redis';
         ],
       }),
     },
-    // AppGateway,
   ],
 })
 export class AppModule {}

@@ -13,6 +13,7 @@ import { DeviceModel, DeviceSchema } from '../device/device.scheme';
 import { BullModule } from '@nestjs/bull';
 import { BOARD_QUEUE } from './queue.constants';
 import { BoardQueueProcessor } from './board.processor';
+import { BoardGateway } from './board.gateway';
 
 @Module({
   imports: [
@@ -29,6 +30,6 @@ import { BoardQueueProcessor } from './board.processor';
     }),
   ],
   controllers: [BoardController],
-  providers: [BoardService, DeviceService, OneSignalService, BoardQueueProcessor],
+  providers: [BoardService, DeviceService, OneSignalService, BoardQueueProcessor, BoardGateway],
 })
 export class BoardModule {}
