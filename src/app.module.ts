@@ -34,7 +34,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       redis: {
         host: process.env.REDIS_HOST,
         name: process.env.REDIS_NAME,
-        host: process.env.REDIS_HOST,
         port: +process.env.REDIS_PORT,
       },
     }),
