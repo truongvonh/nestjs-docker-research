@@ -9,6 +9,8 @@ import { CreateCardDTO, UpdateCardBodyDTO, UpdateCardParamDTO } from './dto/card
 import { Response } from 'express';
 import { ListsService } from '../lists/lists.service';
 import { CardService } from './card.service';
+import { BoardGateway } from '../board/board.gateway';
+import { CARD_SOCKET_EMIT_EVENT } from './constants/card.socket';
 
 @Controller('card')
 @ApiTags('Card Endpoint')
@@ -17,6 +19,7 @@ export class CardController {
     @InjectModel(CardModel.name) private cardModel: Model<CardModel>,
     @InjectModel(ListsModel.name) private listModel: Model<ListsModel>,
     private listService: ListsService,
+    private boardGateway: BoardGateway,
     private cardService: CardService,
   ) {}
 
@@ -33,7 +36,13 @@ export class CardController {
 
     const nextOrderByList = await this.cardService.getNextOrderByList(listId);
 
-    await new this.cardModel({ ...createCardDTO, order: nextOrderByList }).save();
+    const newCard = await new this.cardModel({ ...createCardDTO, order: nextOrderByList }).save();
+
+    const list = await this.listModel.findOne({ _id: newCard.listId });
+
+    this.boardGateway.server
+      .to(list.toObject().boardId.toString())
+      .emit(CARD_SOCKET_EMIT_EVENT.NEW_CARD, { listId, newCard });
 
     return res.status(HttpStatus.OK).json();
   }

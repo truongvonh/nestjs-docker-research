@@ -21,14 +21,19 @@ import { ListsModule } from './lists/lists.module';
 import { DeviceModule } from './device/device.module';
 import { BullModule } from '@nestjs/bull';
 import { CardModule } from './card/card.module';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static'),
+    }),
     RedisModule.register(REDIS_OPTIONS),
     BullModule.forRoot({
       redis: {
-        name: process.env.REDIS_NAME,
         host: process.env.REDIS_HOST,
+        name: process.env.REDIS_NAME,
         port: +process.env.REDIS_PORT,
       },
     }),

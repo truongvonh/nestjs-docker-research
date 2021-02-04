@@ -9,8 +9,6 @@ services:
       - '4000:4000'
     networks:
       - app-network
-    #    env_file:
-    #      - .env
     depends_on:
       - redis
       - database
@@ -29,7 +27,7 @@ services:
     networks:
       - app-network
     volumes:
-      - '.:/var/lib/redis'
+      - '.:/var/lib/redis:rw'
 
   database:
     container_name: mongo

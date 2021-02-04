@@ -9,6 +9,7 @@ import { config } from 'aws-sdk';
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import { OneSignalService } from './shared/services/one-signal.service';
+import { RedisIoAdapter } from './adapters/redis.adapter';
 
 const PORT = process.env.APP_PORT || 8000;
 
@@ -16,6 +17,7 @@ const corsArr = ['http://localhost:3000', 'https://trello-clone.dev'];
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useWebSocketAdapter(new RedisIoAdapter(app));
   app.enableCors({ origin: corsArr, credentials: true });
 
   app.setGlobalPrefix('api');
