@@ -139,7 +139,7 @@ export class ListsController {
     }
 
     this.boardGateway.server
-      .to(listToUpdate.toObject().boardId)
+      .to(listToUpdate.toObject().boardId.toString())
       .emit(LIST_EMIT_EVENT.UPDATED_LIST, listToUpdate);
 
     return res.status(HttpStatus.OK).json(listToUpdate);

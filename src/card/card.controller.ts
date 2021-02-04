@@ -41,7 +41,7 @@ export class CardController {
     const list = await this.listModel.findOne({ _id: newCard.listId });
 
     this.boardGateway.server
-      .to(list.toObject().boardId)
+      .to(list.toObject().boardId.toString())
       .emit(CARD_SOCKET_EMIT_EVENT.NEW_CARD, { listId, newCard });
 
     return res.status(HttpStatus.OK).json();
