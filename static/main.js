@@ -19,9 +19,9 @@ const app = new Vue({
   },
   methods: {
     onChange(event) {
-      this.socket.emit('LEAVE_ROOM', this.activeRoom);
+      this.socket.emit('LEAVE_BOARD', this.activeRoom);
       this.activeRoom = event.target.value;
-      this.socket.emit('JOIN_ROOM', this.activeRoom);
+      this.socket.emit('JOIN_BOARD', this.activeRoom);
     },
 
     sendMessage() {
@@ -43,9 +43,9 @@ const app = new Vue({
     },
     check() {
       if (this.isMemberOfActiveRoom) {
-        this.socket.emit('LEAVE_ROOM', this.activeRoom);
+        this.socket.emit('LEAVE_BOARD', this.activeRoom);
       } else {
-        this.socket.emit('JOIN_ROOM', this.activeRoom);
+        this.socket.emit('JOIN_BOARD', this.activeRoom);
       }
     },
   },
@@ -66,12 +66,15 @@ const app = new Vue({
       this.check();
     });
 
-    this.socket.on('JOINED_ROOM', room => {
-      console.log('room', room);
+    this.socket.on('CREATED_LIST', newList => {
+      console.log('newList', newList);
+    });
+
+    this.socket.on('JOINED_BOARD', room => {
       this.rooms[room] = true;
     });
 
-    this.socket.on('LEFT_ROOM', room => {
+    this.socket.on('LEFT_BOARD', room => {
       this.rooms[room] = false;
     });
   },

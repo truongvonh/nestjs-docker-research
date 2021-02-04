@@ -30,6 +30,8 @@ import { LIST_ERROR_MESSAGE } from './contants/list.error';
 import { LIST_EVENT, LIST_QUEUE } from './queue.constants';
 import { IUpdateListOrderByQueueDTO, ListUpdateDirectionEnum } from './list.interface';
 import { BoardService } from '../board/board.service';
+import { LIST_EMIT_EVENT } from './contants/list.socket';
+import { BoardGateway } from '../board/board.gateway';
 
 @Controller('lists')
 @ApiTags('Lists Endpoint')
@@ -40,6 +42,7 @@ export class ListsController {
     @InjectQueue(LIST_QUEUE) private readonly listQueue: Queue,
     private listService: ListsService,
     private boardService: BoardService,
+    private boardGateway: BoardGateway,
   ) {}
 
   private NEAR_POSITION: number = 1;
@@ -75,6 +78,8 @@ export class ListsController {
       ...createListDTO,
       order: nextOrder,
     }).save();
+
+    this.boardGateway.server.to(boardId).emit(LIST_EMIT_EVENT.CREATED_LIST, newList);
 
     return res.status(HttpStatus.OK).json(newList);
   }
@@ -125,13 +130,17 @@ export class ListsController {
         } as IUpdateListOrderByQueueDTO);
       }
 
-      return res.status(HttpStatus.OK).json({ ...listToUpdate.toObject(), order: newOrder });
+      listToUpdate.order = newOrder;
     }
 
     if (newName) {
       await new this.listsModel(listToUpdate).updateOne({ $set: { name: newName } });
-      return res.status(HttpStatus.OK).json({ ...listToUpdate.toObject(), name: newName });
+      listToUpdate.name = newName;
     }
+
+    this.boardGateway.server
+      .to(listToUpdate.toObject().boardId)
+      .emit(LIST_EMIT_EVENT.UPDATED_LIST, listToUpdate);
 
     return res.status(HttpStatus.OK).json(listToUpdate);
   }

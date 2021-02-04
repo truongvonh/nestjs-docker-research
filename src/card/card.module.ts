@@ -7,6 +7,7 @@ import { ListsService } from '../lists/lists.service';
 import { CardService } from './card.service';
 import { LabelModule } from './label/label.module';
 import { ChecklistModule } from './checklist/checklist.module';
+import { BoardGateway } from '../board/board.gateway';
 
 @Module({
   imports: [
@@ -18,6 +19,6 @@ import { ChecklistModule } from './checklist/checklist.module';
     ChecklistModule,
   ],
   controllers: [CardController],
-  providers: [ListsService, CardService],
+  providers: [ListsService, CardService, BoardGateway],
 })
 export class CardModule {}
