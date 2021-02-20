@@ -30,6 +30,9 @@ export class UnsplashQueryDTO {
 }
 
 export class UnsplashResponseDTO {
+  // @AutoMap()
+  // blurHash: string;
+
   @AutoMap()
   description: string;
 

@@ -1,10 +1,11 @@
-import { Controller, Get, HttpService, HttpStatus, Query, Res } from '@nestjs/common';
+import { Controller, Get, HttpService, HttpStatus, Query, Res, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UnsplashQueryDTO, UnsplashResponseDTO } from './dto/unsplash.dto';
 import { Response } from 'express';
 import { stringify } from 'query-string';
 import { AutoMapper, InjectMapper } from 'nestjsx-automapper';
 import { UnsplashModel } from './model/unsplash.model';
+import JwtAuthenticationGuard from '../../auth/guard/jwt.guard';
 
 @Controller('unsplash')
 @ApiTags('Unsplash Endpoint')
@@ -14,7 +15,7 @@ export class UnsplashController {
     @InjectMapper() private readonly mapper: AutoMapper,
   ) {}
 
-  // @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(JwtAuthenticationGuard)
   @ApiOperation({ summary: 'Get all unsplash image' })
   @Get()
   public async getAllPhotos(
@@ -26,15 +27,9 @@ export class UnsplashController {
       ...query,
     });
 
-    const { data } = await this.httpService
-      .get(`/photos?${parseQuery}`)
-      .toPromise();
+    const { data } = await this.httpService.get(`/photos?${parseQuery}`).toPromise();
 
-    const mapperUnsplash = this.mapper.mapArray(
-      data,
-      UnsplashResponseDTO,
-      UnsplashModel,
-    );
+    const mapperUnsplash = this.mapper.mapArray(data, UnsplashResponseDTO, UnsplashModel);
 
     return res.status(HttpStatus.OK).json(mapperUnsplash);
   }

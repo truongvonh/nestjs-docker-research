@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Logger,
   Param,
   Post,
   Put,
@@ -12,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { BoardModel } from '../board/board.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { ListsModel } from './lists.schema';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import JwtAuthenticationGuard from '../auth/guard/jwt.guard';
@@ -32,6 +33,8 @@ import { IUpdateListOrderByQueueDTO, ListUpdateDirectionEnum } from './list.inte
 import { BoardService } from '../board/board.service';
 import { LIST_EMIT_EVENT } from './contants/list.socket';
 import { BoardGateway } from '../board/board.gateway';
+
+const isNumber = (number: number): boolean => !isNaN(number);
 
 @Controller('lists')
 @ApiTags('Lists Endpoint')
@@ -56,9 +59,16 @@ export class ListsController {
   ): Promise<Response> {
     const { boardId } = queryListParam;
 
-    const allLists = await this.listsModel.find({ boardId }, '-cards -boardId').lean();
+    const [lists, board] = await Promise.all([
+      this.listsModel
+        .find({ boardId }, '-boardId')
+        .sort({ order: 1 })
+        .populate({ path: 'cards', select: 'name _id listId order' })
+        .lean(),
+      this.boardModel.findOne({ _id: Types.ObjectId(boardId) }).select('urls name _id'),
+    ]);
 
-    return res.status(HttpStatus.OK).json(allLists);
+    return res.status(HttpStatus.OK).json({ lists, board });
   }
 
   @ApiOperation({ summary: 'Create lists' })
@@ -98,7 +108,7 @@ export class ListsController {
     const listToUpdate = await this.listService.checkListExistById(listId);
     const { order: currentOrder } = listToUpdate;
 
-    if (newOrder) {
+    if (isNumber(newOrder)) {
       const maxOrder = await this.listsModel.find({ boardId: listToUpdate.boardId }).count();
 
       if (newOrder > maxOrder) {
@@ -109,25 +119,30 @@ export class ListsController {
         newOrder === currentOrder + this.NEAR_POSITION ||
         currentOrder === newOrder + this.NEAR_POSITION
       ) {
-        const listByNewOrder = await this.listsModel.findOne({ order: newOrder });
+        const listByNewOrder = await this.listsModel.findOne({
+          order: newOrder,
+          boardId: listToUpdate.boardId,
+        });
         await Promise.all([
           new this.listsModel(listToUpdate).updateOne({ $set: { order: newOrder } }),
           new this.listsModel(listByNewOrder).updateOne({ $set: { order: currentOrder } }),
         ]);
-      }
-
-      if (newOrder > currentOrder) {
-        await this.listQueue.add(LIST_EVENT.UPDATE_LIST_ORDER_BY_DIRECTION, {
-          listToUpdate,
-          newOrder,
-          direction: ListUpdateDirectionEnum.Left,
-        } as IUpdateListOrderByQueueDTO);
       } else {
-        await this.listQueue.add(LIST_EVENT.UPDATE_LIST_ORDER_BY_DIRECTION, {
-          listToUpdate,
-          newOrder,
-          direction: ListUpdateDirectionEnum.Right,
-        } as IUpdateListOrderByQueueDTO);
+        Logger.debug(`newOrder: ${newOrder}`);
+        Logger.debug(`currentOrder: ${currentOrder}`);
+        if (newOrder > currentOrder) {
+          await this.listQueue.add(LIST_EVENT.UPDATE_LIST_ORDER_BY_DIRECTION, {
+            listToUpdate,
+            newOrder,
+            direction: ListUpdateDirectionEnum.Left,
+          } as IUpdateListOrderByQueueDTO);
+        } else {
+          await this.listQueue.add(LIST_EVENT.UPDATE_LIST_ORDER_BY_DIRECTION, {
+            listToUpdate,
+            newOrder,
+            direction: ListUpdateDirectionEnum.Right,
+          } as IUpdateListOrderByQueueDTO);
+        }
       }
 
       listToUpdate.order = newOrder;

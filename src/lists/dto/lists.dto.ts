@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateListsDTO {
   @IsString()
   @ApiProperty({
-    example: 'Board id',
+    example: '6025142d1113df001e4ef32c',
     name: 'boardId',
   })
   readonly boardId: string;
@@ -21,9 +21,25 @@ export class GetListParam {
   @IsString()
   @ApiProperty({
     name: 'boardId',
-    example: 'Board Id',
+    example: '6025142d1113df001e4ef32c',
   })
   readonly boardId: string;
+}
+
+export enum ParseTrelloListEnum {
+  Yes = 'Yes',
+  No = 'No',
+}
+
+export class GetListQuery {
+  @IsString()
+  @IsOptional()
+  @ApiProperty({
+    name: 'parseTrello',
+    example: ParseTrelloListEnum.No,
+    enum: ParseTrelloListEnum,
+  })
+  readonly parseTrello?: ParseTrelloListEnum;
 }
 
 export class UpdateListParamDTO {
