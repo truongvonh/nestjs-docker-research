@@ -9,14 +9,15 @@ import { LIST_QUEUE } from './queue.constants';
 import { ListQueueProcessor } from './list.processor';
 import { BoardService } from '../board/board.service';
 import { BoardGateway } from '../board/board.gateway';
+import { CardModel, CardSchema } from '../card/card.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: BoardModel.name, schema: BoardSchema },
       { name: ListsModel.name, schema: ListsSchema },
+      { name: CardModel.name, schema: CardSchema },
     ]),
-
     BullModule.registerQueue({
       name: LIST_QUEUE,
     }),

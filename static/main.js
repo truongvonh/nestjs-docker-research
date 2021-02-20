@@ -56,13 +56,14 @@ const app = new Vue({
   },
   created() {
     this.activeRoom = this.selected;
-    this.socket = io('http://localhost:4000/board');
+    this.socket = io('ws://localhost:4000/board');
     this.socket.on('msgToClient', message => {
       console.log(message);
       this.receivedMessage(message);
     });
 
     this.socket.on('connect', () => {
+      alert(123);
       this.check();
     });
 

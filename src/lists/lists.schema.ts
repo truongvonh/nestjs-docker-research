@@ -1,6 +1,7 @@
 import { Document, SchemaTypes, Types } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { CardModel } from '../card/card.schema';
 
 @Schema({ timestamps: true })
 export class ListsModel extends Document {
@@ -13,7 +14,7 @@ export class ListsModel extends Document {
   order: number;
 
   @ApiProperty()
-  @Prop([{ type: SchemaTypes.ObjectId, required: false }])
+  @Prop([{ type: SchemaTypes.ObjectId, required: false, ref: CardModel.name }])
   cards: Types.ObjectId[];
 
   @ApiProperty()

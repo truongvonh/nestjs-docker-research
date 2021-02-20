@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ListsModel } from './lists.schema';
@@ -70,7 +70,7 @@ export class ListsService {
     const checkOrderByDirection = direction === ListUpdateDirectionEnum.Left ? -1 : 1;
 
     await this.listsModel.update(
-      { _id: { $in: listIdsForUpdate } },
+      { _id: { $in: listIdsForUpdate }, boardId: listToUpdate.boardId },
       { $inc: { order: checkOrderByDirection } },
       { multi: true },
     );

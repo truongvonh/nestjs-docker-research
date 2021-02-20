@@ -51,6 +51,8 @@ export class UnsplashModel {
   width: number;
   height: number;
   color: string;
+
+  @AutoMap()
   blur_hash: string;
 
   @AutoMap()

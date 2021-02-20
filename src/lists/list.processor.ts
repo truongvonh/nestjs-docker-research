@@ -18,12 +18,12 @@ export class ListQueueProcessor {
   private readonly logger = new Logger(ListQueueProcessor.name);
 
   @Process(LIST_EVENT.UPDATE_LIST_ORDER_BY_DIRECTION)
-  public async updateListOrderInLeftProcess(job: Job<IUpdateListOrderByQueueDTO>) {
+  public async updateListOrderByDirectionProcess(job: Job<IUpdateListOrderByQueueDTO>) {
     this.logger.debug(
       '================== LIST_EVENT.UPDATE_LIST_ORDER_BY_DIRECTION START ==================',
     );
 
-    const { listToUpdate, newOrder } = job.data;
+    const { listToUpdate, newOrder, direction } = job.data;
     const { first, last } = await this.listService.getParamsForListQueue(job.data);
 
     this.logger.debug(first);
@@ -33,14 +33,16 @@ export class ListQueueProcessor {
       first,
       last,
       listToUpdate,
-      direction: ListUpdateDirectionEnum.Left,
+      direction,
     });
+
+    Logger.debug(`direction: ${direction}`);
 
     await this.listService.updateListByDirection({
       listIdsForUpdate,
       listToUpdate,
       newOrder,
-      direction: ListUpdateDirectionEnum.Left,
+      direction,
     });
 
     this.logger.debug(

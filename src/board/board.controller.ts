@@ -17,7 +17,12 @@ import JwtAuthenticationGuard from '../auth/guard/jwt.guard';
 import { InjectModel } from '@nestjs/mongoose';
 import { BoardModel } from './board.schema';
 import { Request, Response } from 'express';
-import { AddUserBoardDTO, CreateBoardDTO, QueryUserBoardDTO, UserBoardResponse } from './dto/board.dto';
+import {
+  AddUserBoardDTO,
+  CreateBoardDTO,
+  QueryUserBoardDTO,
+  UserBoardResponse,
+} from './dto/board.dto';
 import { REQUEST } from '@nestjs/core';
 import { Model, Types } from 'mongoose';
 import { IUserRequest } from '../auth/interfaces/auth.interface';
@@ -75,25 +80,9 @@ export class BoardController {
     const { userId } = param;
     Logger.debug(param);
 
-    const excludeBoard = { select: '-boards' };
-
-    const response = await this.userModel
-      .findOne({ _id: userId })
-      .populate({
-        path: 'boards',
-        select: '-lists',
-        populate: [
-          {
-            path: 'owner',
-            ...excludeBoard,
-          },
-          {
-            path: 'users',
-            ...excludeBoard,
-          },
-        ],
-      })
-      .lean();
+    const response = await this.boardModel
+      .find({ users: { $in: [Types.ObjectId(userId)] } })
+      .select('name _id urls');
 
     return res.status(HttpStatus.OK).json(response);
   }
