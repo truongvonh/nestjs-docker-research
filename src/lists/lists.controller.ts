@@ -31,8 +31,9 @@ import { LIST_ERROR_MESSAGE } from './contants/list.error';
 import { LIST_EVENT, LIST_QUEUE } from './queue.constants';
 import { IUpdateListOrderByQueueDTO, ListUpdateDirectionEnum } from './list.interface';
 import { BoardService } from '../board/board.service';
+import { WebSocketServer } from '@nestjs/websockets';
+import { Server } from 'socket.io';
 import { LIST_EMIT_EVENT } from './contants/list.socket';
-import { BoardGateway } from '../board/board.gateway';
 
 const isNumber = (number: number): boolean => !isNaN(number);
 
@@ -45,9 +46,9 @@ export class ListsController {
     @InjectQueue(LIST_QUEUE) private readonly listQueue: Queue,
     private listService: ListsService,
     private boardService: BoardService,
-    private boardGateway: BoardGateway,
   ) {}
 
+  @WebSocketServer() socketServer: Server;
   private NEAR_POSITION: number = 1;
 
   @ApiOperation({ summary: 'Get all lists' })
@@ -63,7 +64,11 @@ export class ListsController {
       this.listsModel
         .find({ boardId }, '-boardId')
         .sort({ order: 1 })
-        .populate({ path: 'cards', select: 'name _id listId order' })
+        .populate({
+          path: 'cards',
+          select: 'name _id listId order',
+          option: { sort: { order: 1 } },
+        })
         .lean(),
       this.boardModel.findOne({ _id: Types.ObjectId(boardId) }).select('urls name _id'),
     ]);
@@ -89,7 +94,7 @@ export class ListsController {
       order: nextOrder,
     }).save();
 
-    this.boardGateway.server.to(boardId).emit(LIST_EMIT_EVENT.CREATED_LIST, newList);
+    this.socketServer.to(boardId).emit(LIST_EMIT_EVENT.CREATED_LIST, newList);
 
     return res.status(HttpStatus.OK).json(newList);
   }
@@ -153,7 +158,7 @@ export class ListsController {
       listToUpdate.name = newName;
     }
 
-    this.boardGateway.server
+    this.socketServer
       .to(listToUpdate.toObject().boardId.toString())
       .emit(LIST_EMIT_EVENT.UPDATED_LIST, listToUpdate);
 

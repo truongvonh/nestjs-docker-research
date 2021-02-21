@@ -19,7 +19,7 @@ export class CardController {
     @InjectModel(CardModel.name) private cardModel: Model<CardModel>,
     @InjectModel(ListsModel.name) private listModel: Model<ListsModel>,
     private listService: ListsService,
-    private boardGateway: BoardGateway,
+    // private boardGateway: BoardGateway,
     private cardService: CardService,
   ) {}
 
@@ -42,9 +42,9 @@ export class CardController {
 
     await new this.listModel(list).update({ $push: { cards: newCard._id } });
 
-    this.boardGateway.server
-      .to(list.toObject().boardId.toString())
-      .emit(CARD_SOCKET_EMIT_EVENT.NEW_CARD, { listId, newCard });
+    // this.boardGateway.server
+    //   .to(list.toObject().boardId.toString())
+    //   .emit(CARD_SOCKET_EMIT_EVENT.NEW_CARD, { listId, newCard });
 
     return res.status(HttpStatus.OK).json();
   }

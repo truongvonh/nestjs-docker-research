@@ -23,6 +23,7 @@ import { CardModel, CardSchema } from '../card/card.schema';
     }),
   ],
   controllers: [ListsController],
-  providers: [ListsService, ListQueueProcessor, BoardService, BoardGateway],
+  // providers: [ListsService, ListQueueProcessor, BoardService, BoardGateway],
+  providers: [ListsService, ListQueueProcessor, BoardService],
 })
 export class ListsModule {}
