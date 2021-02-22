@@ -9,12 +9,15 @@ import {
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { BOARD_EMIT_EVENT, BOARD_NAME_SPACE, BOARD_SCRIBE_EVENT } from './constants/board.socket';
+import { SocketService } from '../shared/socket/socket.service';
 
 @WebSocketGateway(BOARD_NAME_SPACE)
 export class BoardGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
   private logger: Logger = new Logger('BoardGateway');
+
+  constructor(private socketService: SocketService) {}
 
   @SubscribeMessage('msgToServer')
   public handleMessage(client: Socket, payload: any) {
@@ -35,6 +38,8 @@ export class BoardGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   }
 
   public afterInit(server: Server): void {
+    this.socketService.socket = server;
+    Logger.debug(`socket service: ${this.socketService.socket}`);
     return this.logger.log('Board gateway Init');
   }
 

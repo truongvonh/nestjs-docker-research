@@ -14,6 +14,7 @@ import { BullModule } from '@nestjs/bull';
 import { BOARD_QUEUE } from './queue.constants';
 import { BoardQueueProcessor } from './board.processor';
 import { BoardGateway } from './board.gateway';
+import { SocketService } from '../shared/socket/socket.service';
 
 @Module({
   imports: [

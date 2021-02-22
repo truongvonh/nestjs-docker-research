@@ -18,7 +18,6 @@ import { ChecklistModule } from './checklist/checklist.module';
     ChecklistModule,
   ],
   controllers: [CardController],
-  // providers: [ListsService, CardService, BoardGateway],
   providers: [ListsService, CardService],
 })
 export class CardModule {}

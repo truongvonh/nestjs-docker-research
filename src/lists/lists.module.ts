@@ -8,7 +8,6 @@ import { BullModule } from '@nestjs/bull';
 import { LIST_QUEUE } from './queue.constants';
 import { ListQueueProcessor } from './list.processor';
 import { BoardService } from '../board/board.service';
-import { BoardGateway } from '../board/board.gateway';
 import { CardModel, CardSchema } from '../card/card.schema';
 
 @Module({
@@ -23,7 +22,6 @@ import { CardModel, CardSchema } from '../card/card.schema';
     }),
   ],
   controllers: [ListsController],
-  // providers: [ListsService, ListQueueProcessor, BoardService, BoardGateway],
   providers: [ListsService, ListQueueProcessor, BoardService],
 })
 export class ListsModule {}

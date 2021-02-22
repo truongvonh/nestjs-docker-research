@@ -23,6 +23,7 @@ import { BullModule } from '@nestjs/bull';
 import { CardModule } from './card/card.module';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { SocketModule } from './shared/socket/socket.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     ListsModule,
     DeviceModule,
     CardModule,
+    SocketModule,
   ],
   controllers: [AppController],
   providers: [

@@ -31,9 +31,8 @@ import { LIST_ERROR_MESSAGE } from './contants/list.error';
 import { LIST_EVENT, LIST_QUEUE } from './queue.constants';
 import { IUpdateListOrderByQueueDTO, ListUpdateDirectionEnum } from './list.interface';
 import { BoardService } from '../board/board.service';
-import { WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
 import { LIST_EMIT_EVENT } from './contants/list.socket';
+import { SocketService } from '../shared/socket/socket.service';
 
 const isNumber = (number: number): boolean => !isNaN(number);
 
@@ -46,9 +45,9 @@ export class ListsController {
     @InjectQueue(LIST_QUEUE) private readonly listQueue: Queue,
     private listService: ListsService,
     private boardService: BoardService,
+    private socketService: SocketService,
   ) {}
 
-  @WebSocketServer() socketServer: Server;
   private NEAR_POSITION: number = 1;
 
   @ApiOperation({ summary: 'Get all lists' })
@@ -94,7 +93,7 @@ export class ListsController {
       order: nextOrder,
     }).save();
 
-    this.socketServer.to(boardId).emit(LIST_EMIT_EVENT.CREATED_LIST, newList);
+    this.socketService.socket.to(boardId).emit(LIST_EMIT_EVENT.CREATED_LIST, newList);
 
     return res.status(HttpStatus.OK).json(newList);
   }
@@ -158,7 +157,7 @@ export class ListsController {
       listToUpdate.name = newName;
     }
 
-    this.socketServer
+    this.socketService.socket
       .to(listToUpdate.toObject().boardId.toString())
       .emit(LIST_EMIT_EVENT.UPDATED_LIST, listToUpdate);
 
