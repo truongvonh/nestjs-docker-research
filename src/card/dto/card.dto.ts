@@ -1,5 +1,7 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { CardUpdateDirectionEnum } from '../constants/card.enum';
+import { CardModel } from '../card.schema';
 
 export class CreateCardDTO {
   @IsString()
@@ -33,14 +35,6 @@ export class UpdateCardBodyDTO {
   @IsOptional()
   readonly description: string;
 
-  @IsNumber()
-  @ApiProperty({
-    example: 'Card order',
-    name: 'order',
-  })
-  @IsOptional()
-  readonly order: number;
-
   @IsString()
   @ApiProperty({
     example: 'Card name',
@@ -50,6 +44,29 @@ export class UpdateCardBodyDTO {
   readonly name: string;
 }
 
+export class UpdateCardOrderBodyDTO {
+  @IsString()
+  @ApiProperty({
+    example: '601426d30d816c0116221870',
+    name: 'sourceListId',
+  })
+  readonly sourceListId: string;
+
+  @IsString()
+  @ApiProperty({
+    example: '601426d30d816c0116221870',
+    name: 'targetListId',
+  })
+  readonly targetListId: string;
+
+  @IsNumber()
+  @ApiProperty({
+    example: 'Card order',
+    name: 'order',
+  })
+  readonly order: number;
+}
+
 export class UpdateCardParamDTO {
   @IsString()
   @ApiProperty({
@@ -57,4 +74,15 @@ export class UpdateCardParamDTO {
     name: 'cardId',
   })
   readonly cardId: string;
+}
+
+export interface IRangeForCardUpdate {
+  cardToUpdate: CardModel;
+  newOrder: number;
+}
+
+export interface IUpdateCardOrderParam {
+  direction: CardUpdateDirectionEnum;
+  cardToUpdate: CardModel;
+  newOrder: number;
 }
