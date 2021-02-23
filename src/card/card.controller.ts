@@ -3,6 +3,7 @@ import {
   Controller,
   HttpException,
   HttpStatus,
+  Logger,
   Param,
   Post,
   Put,
@@ -41,6 +42,8 @@ export class CardController {
     private cardService: CardService,
     private socketService: SocketService,
   ) {}
+
+  private NEAR_POSITION: number = 1;
 
   @ApiOperation({ summary: 'Create new card' })
   @Post()
@@ -81,6 +84,8 @@ export class CardController {
 
     const existCard = await this.cardService.checkCardExistById(cardId);
 
+    const { order: currentOrder } = existCard;
+
     const maxOrder = await this.cardService.getMaxOrderByListId(targetListId);
 
     if (newOrder > maxOrder) {
@@ -88,33 +93,62 @@ export class CardController {
     }
 
     if (sourceListId !== targetListId) {
+      const maxOrderWithoutIndex = maxOrder - 1;
+
+      if (newOrder < maxOrderWithoutIndex || maxOrder) {
+        await this.cardService.updateCardOrderInDifferentList({
+          listTargetId: targetListId,
+          listSourceId: sourceListId,
+          newOrder,
+          currentOrder,
+        });
+      }
+
       await Promise.all([
         this.listModel.findOneAndUpdate(
-          { _id: Types.ObjectId(sourceListId), cards: { $in: [existCard._id] } },
+          {
+            _id: Types.ObjectId(sourceListId),
+            cards: { $in: [existCard._id] },
+          },
           { $pull: { cards: existCard._id } },
         ),
         this.listModel.findOneAndUpdate(
           { _id: Types.ObjectId(targetListId) },
           { $push: { cards: existCard._id } },
         ),
-        new this.cardModel(existCard).update({ listId: targetListId }),
+        new this.cardModel(existCard).update({
+          listId: targetListId,
+          order: newOrder,
+        }),
       ]);
-      existCard.listId = Types.ObjectId(targetListId);
-      existCard.order = newOrder;
     } else {
       const updateOrderParam = {
         direction: CardUpdateDirectionEnum.Top,
         newOrder,
         cardToUpdate: existCard,
       } as IUpdateCardOrderParam;
-
-      if (newOrder > existCard.order) {
-        await this.cardService.updateCardOrderByDirection(updateOrderParam);
-      } else {
-        await this.cardService.updateCardOrderByDirection({
-          ...updateOrderParam,
-          direction: CardUpdateDirectionEnum.Bottom,
+      if (
+        newOrder === currentOrder + this.NEAR_POSITION ||
+        currentOrder === newOrder + this.NEAR_POSITION
+      ) {
+        const cardByNewOrder = await this.cardModel.findOne({
+          listId: targetListId,
+          order: newOrder,
         });
+
+        await Promise.all([
+          new this.cardModel(existCard).update({ order: newOrder }),
+          new this.cardModel(cardByNewOrder).update({ order: currentOrder }),
+        ]);
+      } else {
+        if (newOrder > currentOrder) {
+          await this.cardService.updateCardOrderInSameList(updateOrderParam);
+        } else {
+          await this.cardService.updateCardOrderInSameList({
+            ...updateOrderParam,
+            direction: CardUpdateDirectionEnum.Bottom,
+          });
+        }
       }
 
       await new this.cardModel(existCard).update({ $set: { order: newOrder } });

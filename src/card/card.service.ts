@@ -5,11 +5,16 @@ import { Model, Types } from 'mongoose';
 import { ERRORS_CARD_MESSAGE } from './constants/error.card';
 import { IRangeForCardUpdate, IUpdateCardOrderParam } from './dto/card.dto';
 import { CardUpdateDirectionEnum } from './constants/card.enum';
-import { ListUpdateDirectionEnum } from '../lists/list.interface';
+
+enum ListTypeEnum {
+  Target = 'Target',
+  Source = 'Source',
+}
 
 @Injectable()
 export class CardService {
   constructor(@InjectModel(CardModel.name) private cardModel: Model<CardModel>) {}
+  public NOT_FOUND_INDEX = -1;
 
   public async getNextOrderByList(listId: string) {
     return this.cardModel.find({ listId }).count();
@@ -29,11 +34,15 @@ export class CardService {
     return this.cardModel.find({ listId }).count();
   }
 
-  public async getRangeForCardOrderUpdate({ cardToUpdate, newOrder }: IRangeForCardUpdate) {
-    const allCardByListId = await this.cardModel
-      .find({ listId: cardToUpdate.listId })
+  public async getListOrderCard(listId) {
+    return this.cardModel
+      .find({ listId })
       .sort({ order: 1 })
       .lean();
+  }
+
+  public async getRangeForCardOrderUpdate({ cardToUpdate, newOrder }: IRangeForCardUpdate) {
+    const allCardByListId = await this.getListOrderCard(cardToUpdate.listId);
 
     const firstTmp = allCardByListId.findIndex(({ order }) => order === cardToUpdate.order);
     const lastTmp = allCardByListId.findIndex(({ order }) => order === newOrder);
@@ -56,18 +65,78 @@ export class CardService {
     return arrayList.map(({ _id }) => _id);
   }
 
-  public async updateCardByDirection({ idsCardUpdate, newOrder, direction, cardToUpdate }) {
+  public async getCardIdsByList({ listId, updateOrder, listType }) {
+    const allListCardId = await this.getListOrderCard(listId);
+
+    const first = allListCardId.findIndex(({ order }) => order === updateOrder);
+    const last = allListCardId.length - 1;
+
+    if (first === this.NOT_FOUND_INDEX) {
+      return [];
+    }
+
+    const getLength = last - first;
+    const checkSkip = listType === ListTypeEnum.Source ? first + 1 : first;
+    const checkLimit = listType === ListTypeEnum.Source ? getLength : getLength + 1;
+
+    const allCardUpdate = await this.cardModel
+      .find({ listId })
+      .sort({ order: 1 })
+      .skip(checkSkip)
+      .limit(checkLimit)
+      .lean();
+
+    return allCardUpdate.map(({ _id }) => _id);
+  }
+
+  public async updateCardOrderInDifferentList({
+    listTargetId,
+    newOrder,
+    currentOrder,
+    listSourceId,
+  }) {
+    const [idsSource, idsTarget] = await Promise.all([
+      this.getCardIdsByList({
+        listId: listSourceId,
+        updateOrder: currentOrder,
+        listType: ListTypeEnum.Source,
+      }),
+      this.getCardIdsByList({
+        listId: listTargetId,
+        updateOrder: newOrder,
+        listType: ListTypeEnum.Target,
+      }),
+    ]);
+
+    await Promise.all([
+      this.updateCardOrderByDirection({
+        direction: CardUpdateDirectionEnum.Top,
+        listId: listSourceId,
+        idsCardUpdate: idsSource,
+      }),
+      this.updateCardOrderByDirection({
+        direction: CardUpdateDirectionEnum.Bottom,
+        idsCardUpdate: idsTarget,
+        listId: listTargetId,
+      }),
+    ]);
+  }
+
+  public async updateCardOrderByDirection({ direction, listId, idsCardUpdate }) {
+    if (!idsCardUpdate.length) {
+      return;
+    }
+
     const checkOrderByDirection = direction === CardUpdateDirectionEnum.Top ? -1 : 1;
 
     await this.cardModel.update(
-      { _id: { $in: idsCardUpdate }, listId: cardToUpdate.listId },
+      { _id: { $in: idsCardUpdate }, listId },
       { $inc: { order: checkOrderByDirection } },
       { multi: true },
     );
-    await new this.cardModel(cardToUpdate).update({ $set: { order: newOrder } });
   }
 
-  public async updateCardOrderByDirection({
+  public async updateCardOrderInSameList({
     direction,
     cardToUpdate,
     newOrder,
@@ -81,6 +150,10 @@ export class CardService {
       direction,
     });
 
-    await this.updateCardByDirection({ idsCardUpdate, newOrder, direction, cardToUpdate });
+    await this.updateCardOrderByDirection({
+      direction,
+      listId: cardToUpdate.listId,
+      idsCardUpdate,
+    });
   }
 }
