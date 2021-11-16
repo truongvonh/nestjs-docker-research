@@ -42,7 +42,7 @@
     "@types/aws-sdk": "^2.7.0",
     "@types/passport-local": "^1.0.33",
     "@types/uuid": "^8.3.0",
-    "aws-sdk": "^2.797.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^5.0.0",
     "bull": "^3.20.0",
     "class-transformer": "^0.3.1",
