@@ -31,7 +31,7 @@
     "@nestjs/jwt": "^7.2.0",
     "@nestjs/mongoose": "^7.0.2",
     "@nestjs/passport": "^7.1.0",
-    "@nestjs/platform-express": "^6.7.2",
+    "@nestjs/platform-express": "^9.2.1",
     "@nestjs/platform-socket.io": "^7.6.7",
     "@nestjs/schematics": "^6.7.0",
     "@nestjs/serve-static": "^2.1.4",
